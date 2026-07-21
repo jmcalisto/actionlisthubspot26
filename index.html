@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HubSpot Sandbox — Action List Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent:           #2C5CC5;
+  --accent-dark:      #1E4399;
+  --accent-light:     #EAF0FB;
+  --accent-mid:       #C6D6F0;
+  --teal:             #0091AE;
+  --teal-light:       #E5F5F8;
+  --green:            #00BDA5;
+  --green-light:      #E5F8F6;
+  --yellow:           #F5C26B;
+  --yellow-light:     #FEF8EC;
+  --red:              #F2545B;
+  --red-light:        #FEF0F0;
+
+  --bg:               #F5F8FA;
+  --white:            #FFFFFF;
+  --nav-bg:           #2D3E50;
+  --nav-dark:         #253342;
+
+  --grey-100:         #F5F8FA;
+  --grey-200:         #EAF0F6;
+  --grey-300:         #DFE3EB;
+  --grey-400:         #CBD6E2;
+  --grey-500:         #99ACC2;
+  --grey-600:         #7C98B6;
+  --grey-700:         #516F90;
+  --grey-800:         #33475B;
+  --grey-900:         #2D3E50;
+
+  --text-primary:     #33475B;
+  --text-secondary:   #516F90;
+  --text-light:       #7C98B6;
+  --text-link:        #0091AE;
+
+  --border:           #DFE3EB;
+  --border-dark:      #CBD6E2;
+
+  --r-sm:  3px;
+  --r-md:  4px;
+  --r-lg:  8px;
+
+  --font: 'Lexend', sans-serif;
+
+  --shadow-sm: 0 1px 4px rgba(45,62,80,.08);
+  --shadow-md: 0 2px 12px rgba(45,62,80,.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: var(--font); background: var(--bg); color: var(--text-primary); font-size: 14px; display: flex; flex-direction: column; }
+
+/* ── Left nav ──────────────────────────────────────── */
+.app-shell { display: flex; height: 100vh; overflow: hidden; }
+.left-nav {
+  width: 56px;
+  background: var(--nav-bg);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0;
+  flex-shrink: 0;
+  z-index: 10;
+}
+.nav-logo {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 4px 0 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+  border: 2px solid var(--accent-dark);
+}
+.nav-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--r-md);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--grey-500);
+  transition: all .15s;
+  margin-bottom: 2px;
+  font-size: 17px;
+}
+.nav-icon:hover { background: rgba(255,255,255,.08); color: #fff; }
+.nav-icon.active { background: rgba(44,92,197,.25); color: #8FB3F0; }
+.nav-spacer { flex: 1; }
+.nav-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.app-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ── Top nav ──────────────────────────────────────── */
+.top-nav {
+  height: 48px;
+  background: var(--nav-dark);
+  display: flex; align-items: center;
+  padding: 0 16px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.top-nav-item {
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  transition: all .15s;
+}
+.top-nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+.top-nav-item.active { background: rgba(44,92,197,.3); color: #B0CFF5; font-weight: 500; }
+.top-nav-sep { flex: 1; }
+.sandbox-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.account-pill {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,.85);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.account-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+/* ── Bookmarks bar ────────────────────────────────── */
+.bookmarks-bar {
+  display: none;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 6px 20px;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.bookmarks-bar.show { display: flex; }
+.bookmarks-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.bookmark-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--grey-100);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px 4px 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Instruction bar ──────────────────────────────────── */
+.instruction-bar {
+  background: var(--green-light);
+  border-bottom: 1px solid #B8EFE9;
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.instruction-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.instruction-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #007A6E;
+  margin-bottom: 1px;
+}
+.instruction-text { font-size: 13px; color: var(--text-secondary); }
+.instruction-text strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Steps bar ────────────────────────────────────── */
+.steps-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  display: flex; align-items: stretch;
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.step-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 11px 14px;
+  font-size: 12.5px;
+  color: var(--text-light);
+  border-bottom: 2px solid transparent;
+  cursor: default;
+  white-space: nowrap;
+  transition: all .2s;
+  user-select: none;
+}
+.step-tab.done { color: var(--green); border-bottom-color: var(--green); }
+.step-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+.step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all .2s;
+}
+.step-tab.done .step-num { background: var(--green); border-color: var(--green); color: #fff; }
+.step-tab.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Panels ────────────────────────────────────────── */
+.panels { flex: 1; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+.panel { display: none; flex: 1; overflow: hidden; min-height: 0; }
+.panel.active { display: flex; flex-direction: column; }
+.pane-wrap { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+.pane-content { flex: 1; overflow-y: auto; }
+
+/* ── Page header ──────────────────────────────────── */
+.page-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+
+/* ── Cards ────────────────────────────────────────── */
+.hs-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.hs-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--grey-100);
+}
+.hs-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-secondary);
+}
+.hs-card-body { padding: 16px; }
+
+/* ── Pills ────────────────────────────────────────── */
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pill-blue    { background: var(--accent-light);  color: var(--accent-dark); border: 1px solid var(--accent-mid); }
+.pill-teal    { background: var(--teal-light);    color: var(--teal);        border: 1px solid #B8DDE6; }
+.pill-green   { background: var(--green-light);   color: #007A6E;            border: 1px solid #B8EFE9; }
+.pill-yellow  { background: var(--yellow-light);  color: #8C5E00;            border: 1px solid #F8E0A8; }
+.pill-grey    { background: var(--grey-200);      color: var(--text-secondary); border: 1px solid var(--border); }
+
+/* ── Buttons ─────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent-dark); }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn-secondary { background: var(--white); color: var(--text-primary); border-color: var(--border-dark); }
+.btn-secondary:hover { border-color: var(--grey-500); background: var(--grey-100); }
+.btn-success { background: var(--green); color: #fff; }
+.btn-success:hover { background: #009B8C; }
+.btn-success:disabled { opacity: .45; cursor: not-allowed; }
+.btn-text { background: transparent; color: var(--text-link); border: none; padding: 4px 8px; }
+.btn-text:hover { text-decoration: underline; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+/* ── Form controls ───────────────────────────────── */
+.hs-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+.hs-select, .hs-input, .hs-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border-dark);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  background: var(--white);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.hs-textarea { resize: vertical; line-height: 1.6; }
+.hs-select:focus, .hs-input:focus, .hs-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(44,92,197,.15);
+}
+.form-group { margin-bottom: 14px; }
+
+/* ── Task sidebar (workflow checklist) ────────────── */
+.task-sidebar {
+  width: 240px;
+  border-right: 1px solid var(--border);
+  background: var(--white);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+}
+.tsidebar-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.task-items { flex: 1; overflow-y: auto; }
+.task-item-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--grey-200);
+  cursor: default;
+}
+.task-item-row.active-task { background: var(--accent-light); }
+.tcheck {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid var(--grey-400);
+  flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  transition: all .2s;
+}
+.tcheck.done { background: var(--green); border-color: var(--green); color: #fff; }
+.titem-name { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 3px; }
+.task-item-row.done-item .titem-name { color: var(--text-light); text-decoration: line-through; }
+.tsidebar-footer { padding: 10px 14px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-secondary); }
+.progress-bar { height: 5px; background: var(--grey-200); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .4s ease; }
+
+/* ── Needs-action highlight ───────────────────────── */
+.needs-action {
+  position: relative;
+  box-shadow: 0 0 0 3px rgba(242,84,91,.35), 0 0 12px 2px rgba(242,84,91,.15);
+  animation: pulse-action 2s ease-in-out infinite;
+  border-radius: var(--r-md);
+}
+@keyframes pulse-action {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(242,84,91,.35), 0 0 8px 2px rgba(242,84,91,.12); }
+  50%      { box-shadow: 0 0 0 6px rgba(242,84,91,.18), 0 0 16px 4px rgba(242,84,91,.22); }
+}
+.needs-action.inline { display: inline-flex; padding: 4px 8px; }
+.needs-action.round { border-radius: 50%; }
+
+/* ── Answer options ────────────────────────────── */
+.answer-option {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all .15s;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--white);
+  text-align: left;
+  width: 100%;
+  font-family: var(--font);
+}
+.answer-option:hover { border-color: var(--accent); background: var(--accent-light); }
+.answer-option:disabled { cursor: not-allowed; }
+.answer-option.selected { border-color: var(--accent); background: var(--accent-light); }
+.answer-option.correct { border-color: var(--green); background: var(--green-light); color: #007A6E; }
+.answer-option.incorrect { border-color: var(--red); background: var(--red-light); color: #C0272D; opacity: .7; }
+.answer-option.dim { opacity: .45; }
+.opt-letter {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ── Feedback box ────────────────────────────── */
+.feedback-box {
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 10px;
+  display: none;
+}
+.feedback-box.correct { background: var(--green-light); border: 1px solid #B8EFE9; color: #007A6E; }
+.feedback-box.incorrect { background: var(--red-light); border: 1px solid #F9BBBF; color: #C0272D; }
+.feedback-box.info { background: var(--accent-light); border: 1px solid var(--accent-mid); color: var(--accent-dark); }
+
+/* ── Alerts ────────────────────────────── */
+.alert {
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  margin-bottom: 14px;
+  border-left: 3px solid;
+  line-height: 1.5;
+}
+.alert-info    { background: var(--accent-light);  border-color: var(--accent);  color: var(--accent-dark); }
+.alert-success { background: var(--green-light);   border-color: var(--green);   color: #007A6E; }
+.alert-warn    { background: var(--yellow-light);  border-color: var(--yellow);  color: #8C5E00; }
+
+/* ── CRM menu mock (panel 0) ──────────────────────── */
+.crm-menu { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-top: 10px; }
+.crm-menu-item { padding: 9px 14px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--grey-200); color: var(--text-primary); transition: background .12s; }
+.crm-menu-item:last-child { border-bottom: none; }
+.crm-menu-item:hover { background: var(--accent-light); }
+.crm-menu-item.picked { background: var(--green-light); color: #007A6E; font-weight: 600; }
+
+/* ── Task list table (panel 1) ────────────────────── */
+.tl-tabs { display: flex; gap: 4px; align-items: center; padding: 12px 24px 0; flex-wrap: wrap; }
+.tl-tab { padding: 8px 12px; font-size: 13px; color: var(--text-secondary); border-bottom: 2px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all .15s; }
+.tl-tab:hover { color: var(--text-primary); }
+.tl-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tl-count { background: var(--grey-200); color: var(--text-secondary); border-radius: 10px; padding: 0 7px; font-size: 11px; font-weight: 700; }
+.tl-toolbar { display: flex; align-items: center; gap: 10px; padding: 12px 24px; flex-wrap: wrap; }
+.tl-search { flex: 0 1 240px; }
+.tl-toolbar .spacer { flex: 1; }
+.tl-table-wrap { padding: 0 24px 20px; overflow-x: auto; }
+.tl-table { width: 100%; border-collapse: collapse; background: var(--white); font-size: 13px; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+.tl-table th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--grey-100); white-space: nowrap; }
+.tl-table td { padding: 10px 14px; border-bottom: 1px solid var(--grey-200); color: var(--text-primary); vertical-align: middle; white-space: nowrap; }
+.tl-table tr:last-child td { border-bottom: none; }
+.tl-sort { cursor: pointer; user-select: none; display: inline-flex; align-items: center; gap: 4px; }
+.tl-sort .arrow { color: var(--grey-400); font-size: 10px; }
+.tl-sort.sorted .arrow { color: var(--accent); }
+.task-link { color: var(--text-link); font-weight: 600; cursor: pointer; }
+.task-link:hover { text-decoration: underline; }
+.col-priority { display: none; }
+.col-priority.shown { display: table-cell; }
+
+/* ── Edit columns modal list ──────────────────────── */
+.col-item { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 1px solid var(--grey-200); }
+.col-item:last-child { border-bottom: none; }
+.col-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.col-item-name { flex: 1; font-size: 13px; }
+.col-reorder { display: flex; gap: 4px; }
+.col-reorder button { width: 22px; height: 22px; border: 1px solid var(--border-dark); background: var(--white); border-radius: 4px; cursor: pointer; font-size: 11px; color: var(--text-secondary); }
+.col-reorder button:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ── Modal ────────────────────────────── */
+.modal-backdrop {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(45,62,80,.5);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+}
+.modal-backdrop.show { display: flex; }
+.modal-box {
+  background: var(--white);
+  border-radius: var(--r-lg);
+  width: 480px;
+  max-width: 92%;
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-md);
+}
+.modal-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-size: 15px; font-weight: 600; }
+.modal-body { padding: 18px; overflow-y: auto; }
+.modal-foot { padding: 14px 18px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; background: var(--grey-100); }
+
+/* ── Task detail topbar (panel 2/3) ───────────────── */
+.task-topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.task-topbar .crumb { font-size: 13px; color: var(--text-secondary); }
+.task-topbar .crumb strong { color: var(--text-primary); }
+.task-topbar .spacer { flex: 1; }
+.task-badge { font-size: 12px; color: var(--text-light); }
+
+/* ── Three-col contact layout ───────────────── */
+.contact-layout { display: grid; grid-template-columns: 260px 1fr 280px; gap: 16px; padding: 20px 24px; align-items: start; }
+.lp-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
+.lp-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.lp-body { padding: 12px 14px; font-size: 12.5px; }
+.contact-action-icons { display: flex; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--grey-200); }
+.action-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--grey-100); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: all .15s; font-size: 13px; }
+.action-icon:hover { background: var(--accent-light); color: var(--accent); }
+.action-icon.active-icon { background: var(--accent-light); color: var(--accent); border-color: var(--accent-mid); }
+.contact-mini-name { padding: 12px 14px 8px; font-size: 15px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+.contact-mini-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.contact-mini-email { padding: 0 14px 12px; font-size: 12px; color: var(--text-link); }
+.prop-row { display: flex; gap: 0; padding: 7px 0; border-bottom: 1px solid var(--grey-200); align-items: flex-start; }
+.prop-row:last-child { border: none; }
+.prop-label { width: 90px; flex-shrink: 0; font-size: 11.5px; font-weight: 500; color: var(--text-secondary); }
+.prop-value { flex: 1; font-size: 12.5px; line-height: 1.5; word-break: break-word; }
+
+/* ── Center activity feed ─────────────────────── */
+.center-pane { min-width: 0; }
+.contact-tabs { display: flex; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg) var(--r-lg) 0 0; padding: 0 16px; }
+.contact-tab { padding: 12px 0; margin-right: 24px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; }
+.contact-tab.active { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
+.center-card { background: var(--white); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--r-lg) var(--r-lg); padding: 16px; min-height: 200px; box-shadow: var(--shadow-sm); }
+.sub-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--border); margin-bottom: 14px; padding: 4px 0 0; flex-wrap: wrap; }
+.sub-tab { padding: 0 0 10px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; font-weight: 500; }
+.sub-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+.activity-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; margin-bottom: 10px; }
+.activity-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; cursor: pointer; }
+.activity-card-type { font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 6px; }
+.activity-card-date { font-size: 11px; color: var(--text-light); }
+.activity-card-body { font-size: 13px; color: var(--text-secondary); line-height: 1.5; display: none; }
+.activity-card-body.open { display: block; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--grey-200); }
+.activity-card-body strong { color: var(--text-primary); font-weight: 500; }
+.expand-arrow { color: var(--text-light); font-size: 10px; transition: transform .15s; }
+.activity-card-head.open .expand-arrow { transform: rotate(90deg); }
+
+.msg-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--grey-200); }
+.msg-row:last-child { border-bottom: none; }
+.msg-status { color: var(--green); font-weight: 600; }
+
+/* ── Right column ─────────────────────────── */
+.right-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px; margin-bottom: 12px; box-shadow: var(--shadow-sm); }
+.right-card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.deal-card-inner { padding: 12px; background: var(--grey-100); border-radius: var(--r-md); border: 1px solid var(--border); }
+.deal-card-name { font-size: 13px; color: var(--text-link); font-weight: 500; margin-bottom: 8px; }
+.deal-card-meta { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.sa-body { display: none; }
+.sa-body.open { display: block; }
+.sa-toggle-icon { font-size: 12px; }
+
+/* ── Notes (panel 3) ──────────────────────── */
+.note-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 10px; position: relative; }
+.note-card.pinned { border-color: var(--yellow); background: var(--yellow-light); }
+.note-pin-badge { position: absolute; top: -9px; right: 14px; background: var(--yellow); color: #8C5E00; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: none; }
+.note-card.pinned .note-pin-badge { display: inline-block; }
+.note-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+.note-head strong { color: var(--text-primary); }
+.note-body-text { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+.note-actions { display: flex; gap: 12px; margin-top: 8px; font-size: 12px; align-items: center; }
+.note-actions a { color: var(--text-link); cursor: pointer; }
+.note-actions a:hover { text-decoration: underline; }
+
+/* ── Toast ───────────────────────── */
+#toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--nav-bg);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: 12px 16px;
+  font-size: 13px;
+  max-width: 320px;
+  z-index: 200;
+  transform: translateY(60px);
+  opacity: 0;
+  transition: all .3s cubic-bezier(.34,1.5,.64,1);
+  pointer-events: none;
+  box-shadow: var(--shadow-md);
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+.toast-title { font-weight: 600; font-size: 12px; color: #B0CFF5; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ── Result screen ────────────────── */
+.result-wrap { max-width: 560px; margin: 40px auto; padding: 0 20px; text-align: center; }
+.result-icon { font-size: 52px; margin-bottom: 16px; }
+.result-title { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+.result-sub { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 420px; margin: 0 auto 24px; }
+.result-list { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 4px 0; margin-bottom: 20px; box-shadow: var(--shadow-sm); text-align: left; }
+.result-item { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--grey-200); font-size: 13px; }
+.result-item:last-child { border: none; }
+.result-tick { color: var(--green); font-size: 15px; flex-shrink: 0; }
+.closer-quote { background: var(--accent-light); border: 1px solid var(--accent-mid); border-radius: var(--r-lg); padding: 16px 20px; font-size: 13px; line-height: 1.7; margin-bottom: 24px; text-align: left; color: var(--text-primary); }
+.code-word { background: var(--yellow-light); color: #8C5E00; padding: 0 5px; border-radius: 4px; border-bottom: 2px solid var(--yellow); font-weight: 600; }
+
+/* ── Language switcher ────────────── */
+.langbar { display: flex; align-items: center; }
+.langbar select {
+  font-family: var(--font); font-size: 12px; color: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+  border-radius: 6px; padding: 3px 22px 3px 8px; cursor: pointer;
+}
+.langbar select option { color: var(--text-primary); background: var(--white); }
+
+/* ── Scrollbar ────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--grey-300); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--grey-400); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ── Left nav ── -->
+  <div class="left-nav">
+    <div class="nav-logo">H</div>
+    <div class="nav-icon" id="navBookmark" onclick="clickBookmark()" title="Bookmarks">☆</div>
+    <div class="nav-icon active">☰</div>
+    <div class="nav-icon">📣</div>
+    <div class="nav-icon">🖼</div>
+    <div class="nav-icon">⬡</div>
+    <div class="nav-icon">💳</div>
+    <div class="nav-icon">🔔</div>
+    <div class="nav-icon">🗄</div>
+    <div class="nav-spacer"></div>
+    <div class="nav-icon">⚙</div>
+    <div class="nav-avatar">WS</div>
+  </div>
+
+  <div class="app-body">
+
+    <!-- ── Top nav ── -->
+    <div class="top-nav">
+      <div class="top-nav-item" data-i18n="nav_contacts">Contacts</div>
+      <div class="top-nav-item" data-i18n="nav_deals">Deals</div>
+      <div class="top-nav-item" data-i18n="nav_companies">Companies</div>
+      <div class="top-nav-item active" data-i18n="nav_tasks">Tasks</div>
+      <div class="top-nav-sep"></div>
+      <div class="langbar"><select id="langsel" aria-label="Language"></select></div>
+      <div class="account-pill"><span class="account-dot"></span> Wall Street English</div>
+      <div class="sandbox-badge">🧪 HubSpot Sandbox</div>
+    </div>
+
+    <!-- ── Bookmarks bar (revealed after Panel 0) ── -->
+    <div class="bookmarks-bar" id="bookmarksBar">
+      <span class="bookmarks-label" data-i18n="bookmarks_label">Bookmarks</span>
+      <span class="bookmark-chip">🔖 <span data-i18n="nav_tasks">Tasks</span></span>
+    </div>
+
+    <!-- ── Instruction bar ── -->
+    <div class="instruction-bar">
+      <div class="instruction-icon" id="instrIcon">①</div>
+      <div>
+        <div class="instruction-label" id="instrLabel" data-i18n="instr_label_0">Step 1</div>
+        <div class="instruction-text" id="instrText" data-i18n-html="instr_text_0">Log in to HubSpot and find the <strong>Tasks</strong> area from the CRM menu.</div>
+      </div>
+    </div>
+
+    <!-- ── Steps bar ── -->
+    <div class="steps-bar">
+      <div class="step-tab active" id="stab-0"><div class="step-num" id="snum-0">1</div> <span data-i18n="steptab_0">Log in &amp; bookmark</span></div>
+      <div class="step-tab"        id="stab-1"><div class="step-num" id="snum-1">2</div> <span data-i18n="steptab_1">Select a view</span></div>
+      <div class="step-tab"        id="stab-2"><div class="step-num" id="snum-2">3</div> <span data-i18n="steptab_2">Complete a task</span></div>
+      <div class="step-tab"        id="stab-3"><div class="step-num" id="snum-3">4</div> <span data-i18n="steptab_3">Create &amp; pin a note</span></div>
+      <div class="step-tab"        id="stab-4"><div class="step-num" id="snum-4">5</div> <span data-i18n="steptab_4">Complete</span></div>
+    </div>
+
+    <div class="panels">
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- PANEL 0 — Log in & bookmark Tasks                        -->
+      <!-- ════════════════════════════════════════════════════════ -->
+      <div class="panel active" id="panel-0">
+        <div class="pane-wrap">
+          <div class="task-sidebar">
+            <div class="tsidebar-header"><span data-i18n="task_header">Workflow steps</span><span id="taskCount">0 / 4</span></div>
+            <div class="task-items">
+              <div class="task-item-row active-task" id="trow-0"><div class="tcheck" id="tc-0"></div><div><div class="titem-name" data-i18n="task_0">Log in &amp; bookmark Tasks</div></div></div>
+              <div class="task-item-row" id="trow-1"><div class="tcheck" id="tc-1"></div><div><div class="titem-name" data-i18n="task_1">Select a view &amp; edit columns</div></div></div>
+              <div class="task-item-row" id="trow-2"><div class="tcheck" id="tc-2"></div><div><div class="titem-name" data-i18n="task_2">View &amp; complete a task</div></div></div>
+              <div class="task-item-row" id="trow-3"><div class="tcheck" id="tc-3"></div><div><div class="titem-name" data-i18n="task_3">Create &amp; pin a note</div></div></div>
+            </div>
+            <div class="tsidebar-footer"><span id="progressLabel" data-i18n="progress_0">0 of 4 complete</span><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div></div>
+          </div>
+          <div class="pane-content" style="padding:20px 24px">
+            <div class="page-title" style="margin-bottom:6px" data-i18n="p0_title">Log in to HubSpot</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px" data-i18n="p0_sub">Every consultant starts the day the same way: sign in, then find and bookmark the Tasks area.</div>
+
+            <div class="hs-card" id="loginCard">
+              <div class="hs-card-header"><span class="hs-card-title" data-i18n="p0_signin_title">Sign in</span></div>
+              <div class="hs-card-body">
+                <div class="form-group">
+                  <label class="hs-label" data-i18n="lbl_email">Wall Street English email</label>
+                  <input class="hs-input" value="consultant@wallstreetenglish.com" disabled>
+                </div>
+                <div class="form-group">
+                  <label class="hs-label" data-i18n="lbl_password">Password</label>
+                  <input class="hs-input" type="password" value="••••••••••" disabled>
+                </div>
+                <div class="btn-row">
+                  <button class="btn btn-primary needs-action" id="btn-login" onclick="doLogin()" data-i18n="btn_signin">Sign in</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="hs-card" id="navCard" style="display:none">
+              <div class="hs-card-header"><span class="hs-card-title" data-i18n="p0_findtasks_title">Find Tasks in the CRM menu</span></div>
+              <div class="hs-card-body">
+                <div style="font-size:13px;margin-bottom:6px" data-i18n="p0_findtasks_body">Open the <strong>CRM</strong> menu in the left sidebar and click <strong>Tasks</strong> — this is where you'll work every day.</div>
+                <div class="crm-menu">
+                  <div class="crm-menu-item" data-i18n="crm_contacts">Contacts</div>
+                  <div class="crm-menu-item" data-i18n="crm_companies">Companies</div>
+                  <div class="crm-menu-item" data-i18n="crm_deals">Deals</div>
+                  <div class="crm-menu-item" data-i18n="crm_tickets">Tickets</div>
+                  <div class="crm-menu-item needs-action" id="crmTasksItem" onclick="pickCrmTasks(this)" data-i18n="crm_tasks">Tasks</div>
+                </div>
+                <div class="feedback-box" id="nav-feedback"></div>
+              </div>
+            </div>
+
+            <div class="hs-card" id="bookmarkCard" style="display:none">
+              <div class="hs-card-header"><span class="hs-card-title" data-i18n="p0_bookmark_title">Bookmark the page</span></div>
+              <div class="hs-card-body">
+                <div style="font-size:13px" data-i18n-html="p0_bookmark_body">You'll use Tasks every day, so bookmark it. Click the <strong>☆ bookmark icon</strong> in the top-left of the left sidebar.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- PANEL 1 — Select a view & edit columns                   -->
+      <!-- ════════════════════════════════════════════════════════ -->
+      <div class="panel" id="panel-1">
+          <div class="pane-content" style="padding:0">
+            <div class="tl-tabs">
+              <div class="tl-tab" onclick="switchTaskView(this)" data-i18n="tl_tab_due">Due today</div>
+              <div class="tl-tab active" onclick="switchTaskView(this)" data-i18n="tl_tab_all">All tasks</div><span class="tl-count">11</span>
+              <div class="tl-tab" onclick="switchTaskView(this)" data-i18n="tl_tab_overdue">Overdue</div>
+              <div class="tl-tab" onclick="switchTaskView(this)" data-i18n="tl_tab_upcoming">Upcoming</div>
+              <div class="tl-tab" onclick="switchTaskView(this)" data-i18n="tl_tab_unassigned">Unassigned</div>
+            </div>
+            <div class="tl-toolbar">
+              <input class="hs-input tl-search" id="colleagueSearch" data-i18n-ph="ph_searchcolleague" placeholder="Search a colleague's tasks (e.g. to cover for them)">
+              <button class="btn btn-secondary" onclick="searchColleague()" data-i18n="btn_search">Search</button>
+              <div class="spacer"></div>
+              <button class="btn btn-secondary needs-action" id="btn-editcols" onclick="openEditColumnsModal()" data-i18n="btn_editcolumns">Edit columns</button>
+              <button class="btn btn-primary" disabled data-i18n="btn_starttasks">▶ Start 11 tasks</button>
+            </div>
+            <div class="tl-table-wrap">
+              <table class="tl-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th_tasktitle">Task title</th>
+                    <th class="col-priority" id="thPriority"><span class="tl-sort" id="sortPriority" onclick="sortByPriority()"><span data-i18n="th_priority">Priority</span><span class="arrow">▲▼</span></span></th>
+                    <th data-i18n="th_stage">Task stage</th>
+                    <th data-i18n="th_contacts">Task → Contacts</th>
+                    <th data-i18n="th_lastcontacted">Last contacted</th>
+                  </tr>
+                </thead>
+                <tbody id="taskRows">
+                  <tr><td class="task-link" data-i18n="row_task1">Remind to Book Social Media Class</td><td class="col-priority" id="prio-1" data-i18n="prio_high">High</td><td><span class="pill pill-grey" data-i18n="stage_notstarted">Not started</span></td><td data-i18n="row_contact1">Manuela J.</td><td>Jul 8, 2026</td></tr>
+                  <tr><td class="task-link" data-i18n="row_task2">Remind to Book Complementary Class</td><td class="col-priority" id="prio-2" data-i18n="prio_medium">Medium</td><td><span class="pill pill-grey" data-i18n="stage_notstarted">Not started</span></td><td data-i18n="row_contact2">Abdelilah R.</td><td>Apr 8, 2026</td></tr>
+                  <tr><td class="task-link" data-i18n="row_task3">Active not booked</td><td class="col-priority" id="prio-3" data-i18n="prio_high">High</td><td><span class="pill pill-grey" data-i18n="stage_notstarted">Not started</span></td><td data-i18n="row_contact3">Saskia W.</td><td>Jun 5, 2026</td></tr>
+                  <tr><td class="task-link" data-i18n="row_task4">Follow up with Max Lange</td><td class="col-priority" id="prio-4" data-i18n="prio_low">Low</td><td><span class="pill pill-grey" data-i18n="stage_notstarted">Not started</span></td><td data-i18n="row_contact4">Max L.</td><td>Apr 2, 2026</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- PANEL 2 — View & complete a task                         -->
+      <!-- ════════════════════════════════════════════════════════ -->
+      <div class="panel" id="panel-2">
+        <div class="pane-wrap" style="flex-direction:column">
+          <div class="task-topbar">
+            <span class="crumb"><span data-i18n="tl_tab_all">All tasks</span> / <strong data-i18n="row_task3">Active not booked</strong></span>
+            <span class="task-badge" data-i18n="task_badge">Task 1/10</span>
+            <div class="spacer"></div>
+            <button class="btn btn-secondary" data-i18n="btn_reschedule">Reschedule</button>
+            <button class="btn btn-primary" id="btn-task-complete" onclick="completeTaskView()" disabled data-i18n="btn_complete">✓ Complete</button>
+          </div>
+          <div class="pane-content" style="padding:0">
+            <div class="contact-layout">
+
+              <!-- LEFT -->
+              <div>
+                <div class="lp-section">
+                  <div class="contact-action-icons">
+                    <div class="action-icon active-icon" title="Note">📝</div>
+                    <div class="action-icon" title="Email">✉</div>
+                    <div class="action-icon" title="Call">📞</div>
+                    <div class="action-icon" title="Task">✔</div>
+                    <div class="action-icon" title="Meeting">📅</div>
+                  </div>
+                  <div class="contact-mini-name"><span class="contact-mini-avatar">MN</span> Maria Novak</div>
+                  <div class="contact-mini-email">maria.novak@example.com</div>
+                </div>
+                <div class="lp-section">
+                  <div class="lp-header" data-i18n="lp_about">About this contact</div>
+                  <div class="lp-body">
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_phone">Phone</div><div class="prop-value">+49 30 555 0142</div></div>
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_owner">Owner</div><div class="prop-value">Shannah O'Hara</div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CENTER -->
+              <div class="center-pane">
+                <div class="contact-tabs">
+                  <div class="contact-tab" data-i18n="tab_overview">Overview</div>
+                  <div class="contact-tab active" data-i18n="tab_activities">Activities</div>
+                  <div class="contact-tab" data-i18n="tab_intelligence">Intelligence</div>
+                </div>
+                <div class="center-card">
+                  <div class="activity-card">
+                    <div class="activity-card-head needs-action" id="taskCardHead" onclick="toggleTaskCard()">
+                      <div class="activity-card-type"><span class="expand-arrow" id="taskCardArrow">›</span> <span data-i18n="ac_tasktitle">Task: Remind to Book Encounter</span></div>
+                      <div class="activity-card-date" data-i18n="ac_overdue">Overdue: Jul 14, 2026</div>
+                    </div>
+                    <div class="activity-card-body" id="taskCardBody" data-i18n-html="ac_tasknotes">Task notes: remind the student to book their <strong>Encounter</strong>. Current level/unit/lesson: <strong>13 / 50 / 1</strong>.</div>
+                  </div>
+                  <div class="activity-card">
+                    <div class="activity-card-type" style="margin-bottom:8px" data-i18n="ac_whatsapp_title">WhatsApp history</div>
+                    <div class="msg-row"><span>💬</span> <span data-i18n="msg_sent">Marketing WhatsApp sent</span> <span class="msg-status" data-i18n="msg_delivered">· Delivered</span> <span class="msg-status" data-i18n="msg_read">· Read</span></div>
+                  </div>
+                  <div class="hs-card" style="margin-top:16px">
+                    <div class="hs-card-header"><span class="hs-card-title" data-i18n="p2_quickcheck">Quick check</span></div>
+                    <div class="hs-card-body">
+                      <div style="font-size:13px;margin-bottom:14px;line-height:1.5" data-i18n="p2_question">The system already messaged the student by WhatsApp and it was read, but they still haven't booked. What should you do?</div>
+                      <div id="task-opts">
+                        <button class="answer-option needs-action" data-correct="false" onclick="pickTaskOpt(this)"><div class="opt-letter">A</div><span data-i18n="topt_a">Send another WhatsApp message and wait.</span></button>
+                        <button class="answer-option needs-action" data-correct="true" onclick="pickTaskOpt(this)"><div class="opt-letter">B</div><span data-i18n="topt_b">Call the student directly, since messaging alone hasn't worked.</span></button>
+                        <button class="answer-option needs-action" data-correct="false" onclick="pickTaskOpt(this)"><div class="opt-letter">C</div><span data-i18n="topt_c">Leave the task — the system will resolve it automatically.</span></button>
+                      </div>
+                      <div class="feedback-box" id="task-feedback"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div>
+                <div class="right-card">
+                  <div class="right-card-title" data-i18n="rc_deals">Deals (1)</div>
+                  <div class="deal-card-inner">
+                    <div class="deal-card-name" data-i18n="deal_name">Maria Novak — Core Course</div>
+                    <div class="deal-card-meta" data-i18n-html="deal_meta">Amount: €1,850<br>Deal Stage: <strong style="color:var(--text-primary)">Active</strong></div>
+                  </div>
+                </div>
+                <div class="right-card">
+                  <div class="right-card-title" onclick="toggleServicesAgreement()" data-i18n="rc_sa">Services Agreement (1) <span class="sa-toggle-icon">👁</span></div>
+                  <div class="sa-body" id="saBody">
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_level">Level</div><div class="prop-value">13</div></div>
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_unit">Unit</div><div class="prop-value">50</div></div>
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_lesson">Lesson</div><div class="prop-value">1</div></div>
+                    <div class="prop-row"><div class="prop-label" data-i18n="lbl_nextencounter">Next Encounter</div><div class="prop-value" data-i18n="val_none">None booked</div></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- PANEL 3 — Create & pin a note                            -->
+      <!-- ════════════════════════════════════════════════════════ -->
+      <div class="panel" id="panel-3">
+        <div class="pane-wrap" style="flex-direction:column">
+          <div class="task-topbar">
+            <span class="crumb"><span data-i18n="tl_tab_all">All tasks</span> / <strong data-i18n="row_task3">Active not booked</strong></span>
+            <span class="task-badge" data-i18n="p3_status_open">Status: left open — could not reach student</span>
+            <div class="spacer"></div>
+            <button class="btn btn-primary" id="btn-finish" onclick="completeNoteStep()" disabled data-i18n="btn_finish">Finish</button>
+          </div>
+          <div class="pane-content" style="padding:0">
+            <div class="contact-layout">
+
+              <!-- LEFT -->
+              <div>
+                <div class="lp-section">
+                  <div class="contact-action-icons">
+                    <div class="action-icon" title="Note">📝</div>
+                    <div class="action-icon" title="Email">✉</div>
+                    <div class="action-icon" title="Call">📞</div>
+                  </div>
+                  <div class="contact-mini-name"><span class="contact-mini-avatar">MN</span> Maria Novak</div>
+                  <div class="contact-mini-email">maria.novak@example.com</div>
+                </div>
+              </div>
+
+              <!-- CENTER -->
+              <div class="center-pane">
+                <div class="contact-tabs">
+                  <div class="contact-tab active" data-i18n="tab_activities">Activities</div>
+                </div>
+                <div class="center-card">
+                  <div class="sub-tabs">
+                    <div class="sub-tab" data-i18n="sub_all">All activities</div>
+                    <div class="sub-tab active" data-i18n="sub_notes">Notes</div>
+                    <div class="sub-tab" data-i18n="sub_emails">Emails</div>
+                    <div class="sub-tab" data-i18n="sub_calls">Calls</div>
+                  </div>
+                  <div class="btn-row" style="margin-top:0;margin-bottom:14px">
+                    <button class="btn btn-secondary needs-action" id="btn-createnote" onclick="openNoteModal()" data-i18n="btn_createnote">📝 Create a note</button>
+                  </div>
+                  <div class="notes-list" id="notesList"></div>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div>
+                <div class="right-card">
+                  <div class="right-card-title" data-i18n="rc_sa">Services Agreement (1)</div>
+                  <div class="deal-card-meta" data-i18n="p3_sa_hint">Level 13 / Unit 50 / Lesson 1</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- PANEL 4 — Complete                                       -->
+      <!-- ════════════════════════════════════════════════════════ -->
+      <div class="panel" id="panel-4">
+        <div class="pane-content" style="padding:0">
+          <div class="result-wrap">
+            <div class="result-icon">🎉</div>
+            <div class="result-title" data-i18n="p4_title">Nice work!</div>
+            <div class="result-sub" data-i18n="p4_sub">You've completed the full Action List workflow, from logging in to closing the loop with a pinned note.</div>
+            <div class="result-list">
+              <div class="result-item"><span class="result-tick">✓</span> <span data-i18n="task_0">Log in &amp; bookmark Tasks</span></div>
+              <div class="result-item"><span class="result-tick">✓</span> <span data-i18n="task_1">Select a view &amp; edit columns</span></div>
+              <div class="result-item"><span class="result-tick">✓</span> <span data-i18n="task_2">View &amp; complete a task</span></div>
+              <div class="result-item"><span class="result-tick">✓</span> <span data-i18n="task_3">Create &amp; pin a note</span></div>
+            </div>
+            <div class="closer-quote" data-i18n-html="p4_code_intro">Copy this code into the Knowledge Check to confirm you finished the walkthrough:<br><br><span class="code-word">WSE-AL-TASK-COMPLETE-2026</span></div>
+            <div class="btn-row" style="justify-content:center">
+              <button class="btn btn-secondary" onclick="resetAll()" data-i18n="btn_restart">↺ Restart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Edit columns modal -->
+<div class="modal-backdrop" id="editColumnsModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" data-i18n="modal_editcolumns">Edit columns</div>
+      <span style="cursor:pointer;color:var(--text-light)" onclick="closeEditColumnsModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px" data-i18n="modal_editcolumns_hint">Add Priority, then move it up next to Task → Contacts.</div>
+      <div class="col-item">
+        <input type="checkbox" checked disabled>
+        <span class="col-item-name" data-i18n="th_tasktitle">Task title</span>
+      </div>
+      <div class="col-item">
+        <input type="checkbox" id="chkPriority" onchange="togglePriorityCheck()">
+        <span class="col-item-name needs-action" id="priorityColItem" data-i18n="th_priority">Priority</span>
+        <div class="col-reorder">
+          <button id="moveUpBtn" onclick="movePriorityUp()" disabled title="Move up">↑</button>
+        </div>
+      </div>
+      <div class="col-item">
+        <input type="checkbox" checked disabled>
+        <span class="col-item-name" data-i18n="th_stage">Task stage</span>
+      </div>
+      <div class="col-item">
+        <input type="checkbox" checked disabled>
+        <span class="col-item-name" data-i18n="th_contacts">Task → Contacts</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeEditColumnsModal()" data-i18n="btn_cancel">Cancel</button>
+      <button class="btn btn-primary" id="btn-apply-cols" onclick="applyColumns()" data-i18n="btn_apply">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- Create note modal -->
+<div class="modal-backdrop" id="noteModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" data-i18n="modal_createnote">Create a note</div>
+      <span style="cursor:pointer;color:var(--text-light)" onclick="closeNoteModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <textarea class="hs-textarea" id="noteText" rows="4" data-i18n-ph="ph_notetext" placeholder="e.g. Student is away, no contact until 30 July"></textarea>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary)"><input type="checkbox" checked disabled> <span data-i18n="lbl_synccourse">Sync to Course</span></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeNoteModal()" data-i18n="btn_cancel">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-note" onclick="saveNote()" disabled data-i18n="btn_savenote">Save note</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"><div class="toast-title" id="toastTitle"></div><div id="toastMsg"></div></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────────────
+   i18n loader — static translations baked in, no runtime service / API.
+   Keys map to: [data-i18n] (textContent), [data-i18n-html] (innerHTML),
+   [data-i18n-ph] (placeholder attr).
+   Language comes from ?lang=xx → browser language → English.
+   ───────────────────────────────────────────────────────────────────────── */
+const I18N = {
+  en: {
+    title: "HubSpot Sandbox — Action List Practice",
+    nav_contacts: "Contacts", nav_deals: "Deals", nav_companies: "Companies", nav_tasks: "Tasks",
+    bookmarks_label: "Bookmarks",
+    instr_label_0: "Step 1 — Log in", instr_label_1: "Step 2 — Select a view", instr_label_2: "Step 3 — Complete a task", instr_label_3: "Step 4 — Create a note", instr_label_4: "Complete",
+    instr_text_0: "Log in to HubSpot and find the <strong>Tasks</strong> area from the CRM menu, then bookmark it.",
+    instr_text_1: "Select a task view, add the <strong>Priority</strong> column, and sort by priority.",
+    instr_text_2: "Open the first task, check the notes and Services Agreement, then decide how to contact the student.",
+    instr_text_3: "Update the task, add a note explaining what happened, and pin it so the team can see it.",
+    instr_text_4: "You've finished the full Action List workflow.",
+    steptab_0: "Log in & bookmark", steptab_1: "Select a view", steptab_2: "Complete a task", steptab_3: "Create & pin a note", steptab_4: "Complete",
+    task_header: "Workflow steps",
+    task_0: "Log in & bookmark Tasks", task_1: "Select a view & edit columns", task_2: "View & complete a task", task_3: "Create & pin a note",
+    progress_0: "0 of 4 complete", progress_suffix: "of 4 complete",
+    p0_title: "Log in to HubSpot", p0_sub: "Every consultant starts the day the same way: sign in, then find and bookmark the Tasks area.",
+    p0_signin_title: "Sign in", lbl_email: "Wall Street English email", lbl_password: "Password", btn_signin: "Sign in",
+    p0_findtasks_title: "Find Tasks in the CRM menu",
+    p0_findtasks_body: "Open the <strong>CRM</strong> menu in the left sidebar and click <strong>Tasks</strong> — this is where you'll work every day.",
+    crm_contacts: "Contacts", crm_companies: "Companies", crm_deals: "Deals", crm_tickets: "Tickets", crm_tasks: "Tasks",
+    p0_bookmark_title: "Bookmark the page",
+    p0_bookmark_body: "You'll use Tasks every day, so bookmark it. Click the <strong>☆ bookmark icon</strong> in the top-left of the left sidebar.",
+    toast_login_t: "Logged in", toast_login_m: "Welcome — now open the CRM menu.",
+    toast_navpicked_t: "Tasks found", toast_navpicked_m: "Now bookmark this page for daily use.",
+    toast_bookmarked_t: "Bookmarked", toast_bookmarked_m: "Tasks now appears in your bookmarks bar.",
+    tl_tab_due: "Due today", tl_tab_all: "All tasks", tl_tab_overdue: "Overdue", tl_tab_upcoming: "Upcoming", tl_tab_unassigned: "Unassigned",
+    ph_searchcolleague: "Search a colleague's tasks (e.g. to cover for them)", btn_search: "Search",
+    btn_editcolumns: "Edit columns", btn_starttasks: "▶ Start 11 tasks",
+    th_tasktitle: "Task title", th_priority: "Priority", th_stage: "Task stage", th_contacts: "Task → Contacts", th_lastcontacted: "Last contacted",
+    row_task1: "Remind to Book Social Media Class", row_task2: "Remind to Book Complementary Class", row_task3: "Active not booked", row_task4: "Follow up with Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Not started", prio_high: "High", prio_medium: "Medium", prio_low: "Low",
+    toast_colleague_t: "Colleague's tasks added", toast_colleague_m: "Their assigned tasks now appear in your list too.",
+    modal_editcolumns: "Edit columns", modal_editcolumns_hint: "Add Priority, then move it up next to Task → Contacts.",
+    btn_cancel: "Cancel", btn_apply: "Apply",
+    toast_colsapplied_t: "Columns updated", toast_colsapplied_m: "Priority column added. Now sort by priority.",
+    toast_sorted_t: "Sorted by priority", toast_sorted_m: "Highest priority tasks now appear first.",
+    task_badge: "Task 1/10", btn_reschedule: "Reschedule", btn_complete: "✓ Complete",
+    lp_about: "About this contact", lbl_phone: "Phone", lbl_owner: "Owner",
+    tab_overview: "Overview", tab_activities: "Activities", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Task: Remind to Book Encounter", ac_overdue: "Overdue: Jul 14, 2026",
+    ac_tasknotes: "Task notes: remind the student to book their <strong>Encounter</strong>. Current level/unit/lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "WhatsApp history", msg_sent: "Marketing WhatsApp sent", msg_delivered: "Delivered", msg_read: "Read",
+    p2_quickcheck: "Quick check",
+    p2_question: "The system already messaged the student by WhatsApp and it was read, but they still haven't booked. What should you do?",
+    topt_a: "Send another WhatsApp message and wait.",
+    topt_b: "Call the student directly, since messaging alone hasn't worked.",
+    topt_c: "Leave the task — the system will resolve it automatically.",
+    task_fb_correct: "✓ Correct. Calling directly is the right move once messaging alone hasn't worked.",
+    task_fb_incorrect: "Not quite — the system has already tried messaging. Pick the option where you personally contact the student.",
+    rc_deals: "Deals (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Amount: €1,850<br>Deal Stage: <strong style='color:var(--text-primary)'>Active</strong>",
+    rc_sa: "Services Agreement (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Next Encounter", val_none: "None booked",
+    toast_taskdone_t: "Task completed", toast_taskdone_m: "Now update the record with what happened.",
+    p3_status_open: "Status: left open — could not reach student",
+    btn_finish: "Finish",
+    sub_all: "All activities", sub_notes: "Notes", sub_emails: "Emails", sub_calls: "Calls",
+    btn_createnote: "📝 Create a note",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Create a note", ph_notetext: "e.g. Student is away, no contact until 30 July", lbl_synccourse: "Sync to Course",
+    btn_savenote: "Save note",
+    note_by: "Note by You", note_justnow: "Just now",
+    note_actions_pin: "📌 Pin", note_actions_unpin: "Unpin", note_actions_delete: "Delete",
+    toast_notesaved_t: "Note saved", toast_notesaved_m: "Now pin it so the whole team can see it.",
+    toast_pinned_t: "Activity successfully pinned", toast_pinned_m: "The note is now at the top of the thread.",
+    p3_unpin_hint: "Once the student is back in contact, you can unpin or delete this note from the same menu.",
+    p4_title: "Nice work!",
+    p4_sub: "You've completed the full Action List workflow, from logging in to closing the loop with a pinned note.",
+    p4_code_intro: "Copy this code into the Knowledge Check to confirm you finished the walkthrough:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Restart",
+  },
+  es: {
+    title: "Sandbox de HubSpot — Práctica de lista de acciones",
+    nav_contacts: "Contactos", nav_deals: "Negocios", nav_companies: "Empresas", nav_tasks: "Tareas",
+    bookmarks_label: "Marcadores",
+    instr_label_0: "Paso 1 — Iniciar sesión", instr_label_1: "Paso 2 — Seleccionar una vista", instr_label_2: "Paso 3 — Completar una tarea", instr_label_3: "Paso 4 — Crear una nota", instr_label_4: "Completado",
+    instr_text_0: "Inicia sesión en HubSpot y busca el área de <strong>Tareas</strong> en el menú del CRM, luego márcala como favorita.",
+    instr_text_1: "Selecciona una vista de tareas, añade la columna <strong>Prioridad</strong> y ordena por prioridad.",
+    instr_text_2: "Abre la primera tarea, revisa las notas y el Contrato de Servicios, y decide cómo contactar al estudiante.",
+    instr_text_3: "Actualiza la tarea, añade una nota explicando lo sucedido y fíjala para que el equipo pueda verla.",
+    instr_text_4: "Has terminado el flujo completo de la Lista de Acciones.",
+    steptab_0: "Iniciar sesión y marcar", steptab_1: "Seleccionar una vista", steptab_2: "Completar una tarea", steptab_3: "Crear y fijar una nota", steptab_4: "Completado",
+    task_header: "Pasos del flujo de trabajo",
+    task_0: "Iniciar sesión y marcar Tareas", task_1: "Seleccionar una vista y editar columnas", task_2: "Ver y completar una tarea", task_3: "Crear y fijar una nota",
+    progress_0: "0 de 4 completadas", progress_suffix: "de 4 completadas",
+    p0_title: "Inicia sesión en HubSpot", p0_sub: "Todo consultor empieza el día igual: iniciar sesión y luego buscar y marcar el área de Tareas.",
+    p0_signin_title: "Iniciar sesión", lbl_email: "Correo de Wall Street English", lbl_password: "Contraseña", btn_signin: "Iniciar sesión",
+    p0_findtasks_title: "Encuentra Tareas en el menú del CRM",
+    p0_findtasks_body: "Abre el menú <strong>CRM</strong> en la barra lateral izquierda y haz clic en <strong>Tareas</strong>: aquí trabajarás todos los días.",
+    crm_contacts: "Contactos", crm_companies: "Empresas", crm_deals: "Negocios", crm_tickets: "Tickets", crm_tasks: "Tareas",
+    p0_bookmark_title: "Marca la página",
+    p0_bookmark_body: "Usarás Tareas todos los días, así que márcala. Haz clic en el <strong>icono ☆ de marcador</strong> en la parte superior izquierda de la barra lateral.",
+    toast_login_t: "Sesión iniciada", toast_login_m: "Bienvenido — ahora abre el menú del CRM.",
+    toast_navpicked_t: "Tareas encontrado", toast_navpicked_m: "Ahora marca esta página para uso diario.",
+    toast_bookmarked_t: "Marcado como favorito", toast_bookmarked_m: "Tareas ahora aparece en tu barra de marcadores.",
+    tl_tab_due: "Vencen hoy", tl_tab_all: "Todas las tareas", tl_tab_overdue: "Vencidas", tl_tab_upcoming: "Próximas", tl_tab_unassigned: "Sin asignar",
+    ph_searchcolleague: "Busca las tareas de un compañero (por ejemplo, para cubrirlo)", btn_search: "Buscar",
+    btn_editcolumns: "Editar columnas", btn_starttasks: "▶ Iniciar 11 tareas",
+    th_tasktitle: "Título de la tarea", th_priority: "Prioridad", th_stage: "Etapa de la tarea", th_contacts: "Tarea → Contactos", th_lastcontacted: "Último contacto",
+    row_task1: "Recordar reservar la Clase de Redes Sociales", row_task2: "Recordar reservar la Clase Complementaria", row_task3: "Activo, sin reservar", row_task4: "Dar seguimiento a Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Sin iniciar", prio_high: "Alta", prio_medium: "Media", prio_low: "Baja",
+    toast_colleague_t: "Tareas del compañero añadidas", toast_colleague_m: "Sus tareas asignadas ahora también aparecen en tu lista.",
+    modal_editcolumns: "Editar columnas", modal_editcolumns_hint: "Añade Prioridad y luego muévela junto a Tarea → Contactos.",
+    btn_cancel: "Cancelar", btn_apply: "Aplicar",
+    toast_colsapplied_t: "Columnas actualizadas", toast_colsapplied_m: "Columna de Prioridad añadida. Ahora ordena por prioridad.",
+    toast_sorted_t: "Ordenado por prioridad", toast_sorted_m: "Las tareas de mayor prioridad aparecen primero.",
+    task_badge: "Tarea 1/10", btn_reschedule: "Reprogramar", btn_complete: "✓ Completar",
+    lp_about: "Sobre este contacto", lbl_phone: "Teléfono", lbl_owner: "Propietario",
+    tab_overview: "Resumen", tab_activities: "Actividades", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Tarea: Recordar reservar Encounter", ac_overdue: "Vencida: Jul 14, 2026",
+    ac_tasknotes: "Notas de la tarea: recuerda al estudiante reservar su <strong>Encounter</strong>. Level/Unit/Lesson actuales: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Historial de WhatsApp", msg_sent: "WhatsApp de marketing enviado", msg_delivered: "Entregado", msg_read: "Leído",
+    p2_quickcheck: "Verificación rápida",
+    p2_question: "El sistema ya le escribió al estudiante por WhatsApp y el mensaje fue leído, pero aún no ha reservado. ¿Qué deberías hacer?",
+    topt_a: "Enviar otro mensaje de WhatsApp y esperar.",
+    topt_b: "Llamar al estudiante directamente, ya que solo el mensaje no funcionó.",
+    topt_c: "Dejar la tarea — el sistema la resolverá automáticamente.",
+    task_fb_correct: "✓ Correcto. Llamar directamente es la decisión correcta cuando el mensaje por sí solo no ha funcionado.",
+    task_fb_incorrect: "No es correcto — el sistema ya intentó contactarlo por mensaje. Elige la opción en la que tú contactas personalmente al estudiante.",
+    rc_deals: "Negocios (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Importe: €1,850<br>Etapa del negocio: <strong style='color:var(--text-primary)'>Activo</strong>",
+    rc_sa: "Contrato de Servicios (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Próximo Encounter", val_none: "Ninguno reservado",
+    toast_taskdone_t: "Tarea completada", toast_taskdone_m: "Ahora actualiza el registro con lo sucedido.",
+    p3_status_open: "Estado: dejada abierta — no se pudo contactar al estudiante",
+    btn_finish: "Finalizar",
+    sub_all: "Todas las actividades", sub_notes: "Notas", sub_emails: "Correos", sub_calls: "Llamadas",
+    btn_createnote: "📝 Crear una nota",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Crear una nota", ph_notetext: "p. ej. El estudiante está ausente, sin contacto hasta el 30 de julio", lbl_synccourse: "Sincronizar con Course",
+    btn_savenote: "Guardar nota",
+    note_by: "Nota tuya", note_justnow: "Ahora mismo",
+    note_actions_pin: "📌 Fijar", note_actions_unpin: "Quitar fijado", note_actions_delete: "Eliminar",
+    toast_notesaved_t: "Nota guardada", toast_notesaved_m: "Ahora fíjala para que todo el equipo pueda verla.",
+    toast_pinned_t: "Actividad fijada correctamente", toast_pinned_m: "La nota ahora está en la parte superior del hilo.",
+    p3_unpin_hint: "Cuando el estudiante vuelva a estar en contacto, puedes quitar el fijado o eliminar esta nota desde el mismo menú.",
+    p4_title: "¡Buen trabajo!",
+    p4_sub: "Has completado el flujo completo de la Lista de Acciones, desde iniciar sesión hasta cerrar el ciclo con una nota fijada.",
+    p4_code_intro: "Copia este código en la Verificación de Conocimientos para confirmar que terminaste el recorrido:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Reiniciar",
+  },
+  fr: {
+    title: "Bac à sable HubSpot — Exercice sur la liste d'actions",
+    nav_contacts: "Contacts", nav_deals: "Transactions", nav_companies: "Entreprises", nav_tasks: "Tâches",
+    bookmarks_label: "Favoris",
+    instr_label_0: "Étape 1 — Se connecter", instr_label_1: "Étape 2 — Sélectionner une vue", instr_label_2: "Étape 3 — Terminer une tâche", instr_label_3: "Étape 4 — Créer une note", instr_label_4: "Terminé",
+    instr_text_0: "Connectez-vous à HubSpot, trouvez la section <strong>Tâches</strong> dans le menu CRM, puis ajoutez-la à vos favoris.",
+    instr_text_1: "Sélectionnez une vue de tâches, ajoutez la colonne <strong>Priorité</strong>, puis triez par priorité.",
+    instr_text_2: "Ouvrez la première tâche, consultez les notes et le contrat de services, puis décidez comment contacter l'étudiant.",
+    instr_text_3: "Mettez à jour la tâche, ajoutez une note expliquant ce qui s'est passé, puis épinglez-la pour que l'équipe puisse la voir.",
+    instr_text_4: "Vous avez terminé l'ensemble du parcours de la liste d'actions.",
+    steptab_0: "Se connecter et ajouter aux favoris", steptab_1: "Sélectionner une vue", steptab_2: "Terminer une tâche", steptab_3: "Créer et épingler une note", steptab_4: "Terminé",
+    task_header: "Étapes du parcours",
+    task_0: "Se connecter et ajouter Tâches aux favoris", task_1: "Sélectionner une vue et modifier les colonnes", task_2: "Consulter et terminer une tâche", task_3: "Créer et épingler une note",
+    progress_0: "0 sur 4 terminées", progress_suffix: "sur 4 terminées",
+    p0_title: "Connectez-vous à HubSpot", p0_sub: "Chaque consultant commence sa journée de la même façon : se connecter, puis trouver et mettre en favori la section Tâches.",
+    p0_signin_title: "Connexion", lbl_email: "E-mail Wall Street English", lbl_password: "Mot de passe", btn_signin: "Se connecter",
+    p0_findtasks_title: "Trouvez Tâches dans le menu CRM",
+    p0_findtasks_body: "Ouvrez le menu <strong>CRM</strong> dans la barre latérale gauche et cliquez sur <strong>Tâches</strong> — c'est ici que vous travaillerez chaque jour.",
+    crm_contacts: "Contacts", crm_companies: "Entreprises", crm_deals: "Transactions", crm_tickets: "Tickets", crm_tasks: "Tâches",
+    p0_bookmark_title: "Ajoutez la page aux favoris",
+    p0_bookmark_body: "Vous utiliserez Tâches chaque jour, alors ajoutez-la aux favoris. Cliquez sur <strong>l'icône ☆</strong> en haut à gauche de la barre latérale.",
+    toast_login_t: "Connecté", toast_login_m: "Bienvenue — ouvrez maintenant le menu CRM.",
+    toast_navpicked_t: "Tâches trouvé", toast_navpicked_m: "Ajoutez maintenant cette page à vos favoris pour un usage quotidien.",
+    toast_bookmarked_t: "Ajouté aux favoris", toast_bookmarked_m: "Tâches apparaît maintenant dans votre barre de favoris.",
+    tl_tab_due: "Échéance aujourd'hui", tl_tab_all: "Toutes les tâches", tl_tab_overdue: "En retard", tl_tab_upcoming: "À venir", tl_tab_unassigned: "Non attribuées",
+    ph_searchcolleague: "Rechercher les tâches d'un collègue (par ex. pour le remplacer)", btn_search: "Rechercher",
+    btn_editcolumns: "Modifier les colonnes", btn_starttasks: "▶ Démarrer 11 tâches",
+    th_tasktitle: "Titre de la tâche", th_priority: "Priorité", th_stage: "Étape de la tâche", th_contacts: "Tâche → Contacts", th_lastcontacted: "Dernier contact",
+    row_task1: "Rappeler de réserver le cours Réseaux sociaux", row_task2: "Rappeler de réserver le cours complémentaire", row_task3: "Actif, non réservé", row_task4: "Relancer Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Non commencée", prio_high: "Élevée", prio_medium: "Moyenne", prio_low: "Faible",
+    toast_colleague_t: "Tâches du collègue ajoutées", toast_colleague_m: "Ses tâches assignées apparaissent désormais aussi dans votre liste.",
+    modal_editcolumns: "Modifier les colonnes", modal_editcolumns_hint: "Ajoutez Priorité, puis déplacez-la à côté de Tâche → Contacts.",
+    btn_cancel: "Annuler", btn_apply: "Appliquer",
+    toast_colsapplied_t: "Colonnes mises à jour", toast_colsapplied_m: "Colonne Priorité ajoutée. Triez maintenant par priorité.",
+    toast_sorted_t: "Trié par priorité", toast_sorted_m: "Les tâches les plus prioritaires apparaissent désormais en premier.",
+    task_badge: "Tâche 1/10", btn_reschedule: "Reprogrammer", btn_complete: "✓ Terminer",
+    lp_about: "À propos de ce contact", lbl_phone: "Téléphone", lbl_owner: "Propriétaire",
+    tab_overview: "Aperçu", tab_activities: "Activités", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Tâche : Rappeler de réserver Encounter", ac_overdue: "En retard : Jul 14, 2026",
+    ac_tasknotes: "Notes de la tâche : rappelez à l'étudiant de réserver son <strong>Encounter</strong>. Level/Unit/Lesson actuels : <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Historique WhatsApp", msg_sent: "WhatsApp marketing envoyé", msg_delivered: "Distribué", msg_read: "Lu",
+    p2_quickcheck: "Vérification rapide",
+    p2_question: "Le système a déjà envoyé un message WhatsApp à l'étudiant et celui-ci a été lu, mais il n'a toujours pas réservé. Que devez-vous faire ?",
+    topt_a: "Envoyer un autre message WhatsApp et attendre.",
+    topt_b: "Appeler l'étudiant directement, puisque le message seul n'a pas suffi.",
+    topt_c: "Laisser la tâche — le système la résoudra automatiquement.",
+    task_fb_correct: "✓ Correct. Appeler directement est la bonne décision une fois que le message seul n'a pas fonctionné.",
+    task_fb_incorrect: "Pas tout à fait — le système a déjà essayé d'envoyer un message. Choisissez l'option où vous contactez personnellement l'étudiant.",
+    rc_deals: "Transactions (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Montant : €1,850<br>Étape de la transaction : <strong style='color:var(--text-primary)'>Active</strong>",
+    rc_sa: "Contrat de services (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Prochain Encounter", val_none: "Aucun réservé",
+    toast_taskdone_t: "Tâche terminée", toast_taskdone_m: "Mettez maintenant à jour la fiche avec ce qui s'est passé.",
+    p3_status_open: "Statut : laissée ouverte — impossible de joindre l'étudiant",
+    btn_finish: "Terminer",
+    sub_all: "Toutes les activités", sub_notes: "Notes", sub_emails: "E-mails", sub_calls: "Appels",
+    btn_createnote: "📝 Créer une note",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Créer une note", ph_notetext: "ex. l'étudiant est absent, pas de contact avant le 30 juillet", lbl_synccourse: "Synchroniser avec Course",
+    btn_savenote: "Enregistrer la note",
+    note_by: "Votre note", note_justnow: "À l'instant",
+    note_actions_pin: "📌 Épingler", note_actions_unpin: "Désépingler", note_actions_delete: "Supprimer",
+    toast_notesaved_t: "Note enregistrée", toast_notesaved_m: "Épinglez-la maintenant pour que toute l'équipe puisse la voir.",
+    toast_pinned_t: "Activité épinglée avec succès", toast_pinned_m: "La note se trouve maintenant en haut du fil.",
+    p3_unpin_hint: "Une fois que l'étudiant a repris contact, vous pouvez désépingler ou supprimer cette note depuis le même menu.",
+    p4_title: "Bon travail !",
+    p4_sub: "Vous avez terminé l'ensemble du parcours de la liste d'actions, de la connexion jusqu'à la clôture de la boucle avec une note épinglée.",
+    p4_code_intro: "Copiez ce code dans le contrôle des connaissances pour confirmer que vous avez terminé le parcours :<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Recommencer",
+  },
+  de: {
+    title: "HubSpot Sandbox — Aktionsliste üben",
+    nav_contacts: "Kontakte", nav_deals: "Deals", nav_companies: "Unternehmen", nav_tasks: "Aufgaben",
+    bookmarks_label: "Lesezeichen",
+    instr_label_0: "Schritt 1 — Anmelden", instr_label_1: "Schritt 2 — Ansicht auswählen", instr_label_2: "Schritt 3 — Aufgabe abschließen", instr_label_3: "Schritt 4 — Notiz erstellen", instr_label_4: "Abgeschlossen",
+    instr_text_0: "Melden Sie sich bei HubSpot an, suchen Sie im CRM-Menü den Bereich <strong>Aufgaben</strong> und setzen Sie ein Lesezeichen.",
+    instr_text_1: "Wählen Sie eine Aufgabenansicht, fügen Sie die Spalte <strong>Priorität</strong> hinzu und sortieren Sie nach Priorität.",
+    instr_text_2: "Öffnen Sie die erste Aufgabe, prüfen Sie die Notizen und die Servicevereinbarung und entscheiden Sie, wie Sie die Schülerin oder den Schüler kontaktieren.",
+    instr_text_3: "Aktualisieren Sie die Aufgabe, fügen Sie eine Notiz mit den Details hinzu und pinnen Sie sie, damit das Team sie sehen kann.",
+    instr_text_4: "Sie haben den gesamten Aktionsliste-Workflow abgeschlossen.",
+    steptab_0: "Anmelden & Lesezeichen setzen", steptab_1: "Ansicht auswählen", steptab_2: "Aufgabe abschließen", steptab_3: "Notiz erstellen & pinnen", steptab_4: "Abgeschlossen",
+    task_header: "Schritte im Workflow",
+    task_0: "Anmelden & Aufgaben als Lesezeichen setzen", task_1: "Ansicht auswählen & Spalten bearbeiten", task_2: "Aufgabe ansehen & abschließen", task_3: "Notiz erstellen & pinnen",
+    progress_0: "0 von 4 abgeschlossen", progress_suffix: "von 4 abgeschlossen",
+    p0_title: "Bei HubSpot anmelden", p0_sub: "Jede Beraterin und jeder Berater beginnt den Tag gleich: anmelden, dann den Bereich Aufgaben finden und als Lesezeichen speichern.",
+    p0_signin_title: "Anmelden", lbl_email: "Wall Street English E-Mail", lbl_password: "Passwort", btn_signin: "Anmelden",
+    p0_findtasks_title: "Aufgaben im CRM-Menü finden",
+    p0_findtasks_body: "Öffnen Sie das <strong>CRM</strong>-Menü in der linken Seitenleiste und klicken Sie auf <strong>Aufgaben</strong> — hier arbeiten Sie jeden Tag.",
+    crm_contacts: "Kontakte", crm_companies: "Unternehmen", crm_deals: "Deals", crm_tickets: "Tickets", crm_tasks: "Aufgaben",
+    p0_bookmark_title: "Seite als Lesezeichen speichern",
+    p0_bookmark_body: "Sie werden Aufgaben täglich nutzen, also setzen Sie ein Lesezeichen. Klicken Sie oben links in der Seitenleiste auf das <strong>☆-Lesezeichensymbol</strong>.",
+    toast_login_t: "Angemeldet", toast_login_m: "Willkommen — öffnen Sie jetzt das CRM-Menü.",
+    toast_navpicked_t: "Aufgaben gefunden", toast_navpicked_m: "Setzen Sie jetzt ein Lesezeichen für die tägliche Nutzung.",
+    toast_bookmarked_t: "Als Lesezeichen gespeichert", toast_bookmarked_m: "Aufgaben erscheint jetzt in Ihrer Lesezeichenleiste.",
+    tl_tab_due: "Heute fällig", tl_tab_all: "Alle Aufgaben", tl_tab_overdue: "Überfällig", tl_tab_upcoming: "Bevorstehend", tl_tab_unassigned: "Nicht zugewiesen",
+    ph_searchcolleague: "Aufgaben einer Kollegin oder eines Kollegen suchen (z. B. zur Vertretung)", btn_search: "Suchen",
+    btn_editcolumns: "Spalten bearbeiten", btn_starttasks: "▶ 11 Aufgaben starten",
+    th_tasktitle: "Aufgabentitel", th_priority: "Priorität", th_stage: "Aufgabenstatus", th_contacts: "Aufgabe → Kontakte", th_lastcontacted: "Letzter Kontakt",
+    row_task1: "Erinnerung: Social-Media-Kurs buchen", row_task2: "Erinnerung: Zusatzkurs buchen", row_task3: "Aktiv, nicht gebucht", row_task4: "Nachfassen bei Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Nicht begonnen", prio_high: "Hoch", prio_medium: "Mittel", prio_low: "Niedrig",
+    toast_colleague_t: "Aufgaben der Kollegin/des Kollegen hinzugefügt", toast_colleague_m: "Deren zugewiesene Aufgaben erscheinen jetzt auch in Ihrer Liste.",
+    modal_editcolumns: "Spalten bearbeiten", modal_editcolumns_hint: "Fügen Sie Priorität hinzu und verschieben Sie sie neben Aufgabe → Kontakte.",
+    btn_cancel: "Abbrechen", btn_apply: "Übernehmen",
+    toast_colsapplied_t: "Spalten aktualisiert", toast_colsapplied_m: "Spalte Priorität hinzugefügt. Sortieren Sie jetzt nach Priorität.",
+    toast_sorted_t: "Nach Priorität sortiert", toast_sorted_m: "Aufgaben mit der höchsten Priorität erscheinen jetzt zuerst.",
+    task_badge: "Aufgabe 1/10", btn_reschedule: "Verschieben", btn_complete: "✓ Abschließen",
+    lp_about: "Über diesen Kontakt", lbl_phone: "Telefon", lbl_owner: "Inhaber",
+    tab_overview: "Übersicht", tab_activities: "Aktivitäten", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Aufgabe: Erinnerung Encounter buchen", ac_overdue: "Überfällig: Jul 14, 2026",
+    ac_tasknotes: "Aufgabennotizen: Erinnern Sie die Schülerin/den Schüler, ihr/sein <strong>Encounter</strong> zu buchen. Aktuelles Level/Unit/Lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "WhatsApp-Verlauf", msg_sent: "Marketing-WhatsApp gesendet", msg_delivered: "Zugestellt", msg_read: "Gelesen",
+    p2_quickcheck: "Kurzer Check",
+    p2_question: "Das System hat der Schülerin/dem Schüler bereits per WhatsApp geschrieben, die Nachricht wurde gelesen, aber es wurde noch nicht gebucht. Was sollten Sie tun?",
+    topt_a: "Eine weitere WhatsApp-Nachricht senden und abwarten.",
+    topt_b: "Die Schülerin/den Schüler direkt anrufen, da die Nachricht allein nicht ausgereicht hat.",
+    topt_c: "Die Aufgabe liegen lassen — das System löst sie automatisch.",
+    task_fb_correct: "✓ Richtig. Direktes Anrufen ist der richtige Schritt, wenn eine Nachricht allein nicht funktioniert hat.",
+    task_fb_incorrect: "Nicht ganz — das System hat bereits eine Nachricht versucht. Wählen Sie die Option, bei der Sie die Schülerin/den Schüler persönlich kontaktieren.",
+    rc_deals: "Deals (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Betrag: €1,850<br>Deal-Phase: <strong style='color:var(--text-primary)'>Aktiv</strong>",
+    rc_sa: "Servicevereinbarung (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Nächstes Encounter", val_none: "Nichts gebucht",
+    toast_taskdone_t: "Aufgabe abgeschlossen", toast_taskdone_m: "Aktualisieren Sie jetzt den Datensatz mit den Details.",
+    p3_status_open: "Status: offen gelassen — Schülerin/Schüler nicht erreichbar",
+    btn_finish: "Fertig",
+    sub_all: "Alle Aktivitäten", sub_notes: "Notizen", sub_emails: "E-Mails", sub_calls: "Anrufe",
+    btn_createnote: "📝 Notiz erstellen",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Notiz erstellen", ph_notetext: "z. B. Schülerin/Schüler ist abwesend, kein Kontakt bis zum 30. Juli", lbl_synccourse: "Mit Course synchronisieren",
+    btn_savenote: "Notiz speichern",
+    note_by: "Notiz von Ihnen", note_justnow: "Gerade eben",
+    note_actions_pin: "📌 Anpinnen", note_actions_unpin: "Pin entfernen", note_actions_delete: "Löschen",
+    toast_notesaved_t: "Notiz gespeichert", toast_notesaved_m: "Pinnen Sie sie jetzt an, damit das ganze Team sie sehen kann.",
+    toast_pinned_t: "Aktivität erfolgreich angepinnt", toast_pinned_m: "Die Notiz steht jetzt oben im Verlauf.",
+    p3_unpin_hint: "Sobald die Schülerin/der Schüler wieder erreichbar ist, können Sie diese Notiz über dasselbe Menü entfernen oder löschen.",
+    p4_title: "Gut gemacht!",
+    p4_sub: "Sie haben den gesamten Aktionsliste-Workflow abgeschlossen — von der Anmeldung bis zum Abschluss mit einer angepinnten Notiz.",
+    p4_code_intro: "Kopieren Sie diesen Code in den Wissenscheck, um zu bestätigen, dass Sie den Durchlauf abgeschlossen haben:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Neu starten",
+  },
+  it: {
+    title: "Sandbox HubSpot — Esercitazione sulla lista di azioni",
+    nav_contacts: "Contatti", nav_deals: "Trattative", nav_companies: "Aziende", nav_tasks: "Attività",
+    bookmarks_label: "Preferiti",
+    instr_label_0: "Passo 1 — Accedi", instr_label_1: "Passo 2 — Seleziona una vista", instr_label_2: "Passo 3 — Completa un'attività", instr_label_3: "Passo 4 — Crea una nota", instr_label_4: "Completato",
+    instr_text_0: "Accedi a HubSpot e trova l'area <strong>Attività</strong> nel menu CRM, poi aggiungila ai preferiti.",
+    instr_text_1: "Seleziona una vista delle attività, aggiungi la colonna <strong>Priorità</strong> e ordina per priorità.",
+    instr_text_2: "Apri la prima attività, controlla le note e il Contratto di Servizio, poi decidi come contattare lo studente.",
+    instr_text_3: "Aggiorna l'attività, aggiungi una nota che spieghi cosa è successo e fissala in alto perché il team possa vederla.",
+    instr_text_4: "Hai completato l'intero flusso della lista di azioni.",
+    steptab_0: "Accedi e aggiungi ai preferiti", steptab_1: "Seleziona una vista", steptab_2: "Completa un'attività", steptab_3: "Crea e fissa una nota", steptab_4: "Completato",
+    task_header: "Fasi del flusso di lavoro",
+    task_0: "Accedi e aggiungi Attività ai preferiti", task_1: "Seleziona una vista e modifica le colonne", task_2: "Visualizza e completa un'attività", task_3: "Crea e fissa una nota",
+    progress_0: "0 di 4 completate", progress_suffix: "di 4 completate",
+    p0_title: "Accedi a HubSpot", p0_sub: "Ogni consulente inizia la giornata allo stesso modo: accedere, poi trovare e aggiungere ai preferiti l'area Attività.",
+    p0_signin_title: "Accedi", lbl_email: "E-mail Wall Street English", lbl_password: "Password", btn_signin: "Accedi",
+    p0_findtasks_title: "Trova Attività nel menu CRM",
+    p0_findtasks_body: "Apri il menu <strong>CRM</strong> nella barra laterale sinistra e clicca su <strong>Attività</strong> — è qui che lavorerai ogni giorno.",
+    crm_contacts: "Contatti", crm_companies: "Aziende", crm_deals: "Trattative", crm_tickets: "Ticket", crm_tasks: "Attività",
+    p0_bookmark_title: "Aggiungi la pagina ai preferiti",
+    p0_bookmark_body: "Userai Attività ogni giorno, quindi aggiungila ai preferiti. Clicca sull'<strong>icona ☆</strong> in alto a sinistra nella barra laterale.",
+    toast_login_t: "Accesso effettuato", toast_login_m: "Benvenuto — ora apri il menu CRM.",
+    toast_navpicked_t: "Attività trovata", toast_navpicked_m: "Ora aggiungi questa pagina ai preferiti per l'uso quotidiano.",
+    toast_bookmarked_t: "Aggiunta ai preferiti", toast_bookmarked_m: "Attività ora appare nella tua barra dei preferiti.",
+    tl_tab_due: "In scadenza oggi", tl_tab_all: "Tutte le attività", tl_tab_overdue: "Scadute", tl_tab_upcoming: "In arrivo", tl_tab_unassigned: "Non assegnate",
+    ph_searchcolleague: "Cerca le attività di un collega (ad es. per sostituirlo)", btn_search: "Cerca",
+    btn_editcolumns: "Modifica colonne", btn_starttasks: "▶ Avvia 11 attività",
+    th_tasktitle: "Titolo attività", th_priority: "Priorità", th_stage: "Fase attività", th_contacts: "Attività → Contatti", th_lastcontacted: "Ultimo contatto",
+    row_task1: "Ricordare di prenotare il Corso Social Media", row_task2: "Ricordare di prenotare il Corso Complementare", row_task3: "Attivo, non prenotato", row_task4: "Ricontattare Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Non iniziata", prio_high: "Alta", prio_medium: "Media", prio_low: "Bassa",
+    toast_colleague_t: "Attività del collega aggiunte", toast_colleague_m: "Anche le sue attività assegnate ora compaiono nella tua lista.",
+    modal_editcolumns: "Modifica colonne", modal_editcolumns_hint: "Aggiungi Priorità, poi spostala accanto a Attività → Contatti.",
+    btn_cancel: "Annulla", btn_apply: "Applica",
+    toast_colsapplied_t: "Colonne aggiornate", toast_colsapplied_m: "Colonna Priorità aggiunta. Ora ordina per priorità.",
+    toast_sorted_t: "Ordinato per priorità", toast_sorted_m: "Le attività a priorità più alta ora compaiono per prime.",
+    task_badge: "Attività 1/10", btn_reschedule: "Riprogramma", btn_complete: "✓ Completa",
+    lp_about: "Informazioni su questo contatto", lbl_phone: "Telefono", lbl_owner: "Proprietario",
+    tab_overview: "Panoramica", tab_activities: "Attività", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Attività: Ricordare di prenotare Encounter", ac_overdue: "Scaduta: Jul 14, 2026",
+    ac_tasknotes: "Note dell'attività: ricorda allo studente di prenotare il suo <strong>Encounter</strong>. Level/Unit/Lesson attuali: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Cronologia WhatsApp", msg_sent: "WhatsApp di marketing inviato", msg_delivered: "Consegnato", msg_read: "Letto",
+    p2_quickcheck: "Verifica rapida",
+    p2_question: "Il sistema ha già scritto allo studente su WhatsApp ed è stato letto, ma non ha ancora prenotato. Cosa dovresti fare?",
+    topt_a: "Inviare un altro messaggio WhatsApp e aspettare.",
+    topt_b: "Chiamare direttamente lo studente, dato che il solo messaggio non ha funzionato.",
+    topt_c: "Lasciare l'attività — il sistema la risolverà automaticamente.",
+    task_fb_correct: "✓ Corretto. Chiamare direttamente è la mossa giusta quando il solo messaggio non ha funzionato.",
+    task_fb_incorrect: "Non proprio — il sistema ha già provato a scrivere. Scegli l'opzione in cui contatti personalmente lo studente.",
+    rc_deals: "Trattative (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Importo: €1,850<br>Fase della trattativa: <strong style='color:var(--text-primary)'>Attiva</strong>",
+    rc_sa: "Contratto di Servizio (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Prossimo Encounter", val_none: "Nessuno prenotato",
+    toast_taskdone_t: "Attività completata", toast_taskdone_m: "Ora aggiorna la scheda con quanto accaduto.",
+    p3_status_open: "Stato: lasciata aperta — impossibile contattare lo studente",
+    btn_finish: "Fine",
+    sub_all: "Tutte le attività", sub_notes: "Note", sub_emails: "E-mail", sub_calls: "Chiamate",
+    btn_createnote: "📝 Crea una nota",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Crea una nota", ph_notetext: "es. Studente assente, nessun contatto fino al 30 luglio", lbl_synccourse: "Sincronizza con Course",
+    btn_savenote: "Salva nota",
+    note_by: "Nota tua", note_justnow: "Proprio ora",
+    note_actions_pin: "📌 Fissa", note_actions_unpin: "Rimuovi fissaggio", note_actions_delete: "Elimina",
+    toast_notesaved_t: "Nota salvata", toast_notesaved_m: "Ora fissala perché tutto il team possa vederla.",
+    toast_pinned_t: "Attività fissata con successo", toast_pinned_m: "La nota ora si trova in cima al thread.",
+    p3_unpin_hint: "Quando lo studente torna raggiungibile, puoi rimuovere il fissaggio o eliminare questa nota dallo stesso menu.",
+    p4_title: "Ottimo lavoro!",
+    p4_sub: "Hai completato l'intero flusso della lista di azioni, dall'accesso fino alla chiusura del ciclo con una nota fissata.",
+    p4_code_intro: "Copia questo codice nel Knowledge Check per confermare di aver completato il percorso:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Ricomincia",
+  },
+  pt: {
+    title: "Sandbox da HubSpot — Prática da Lista de Ações",
+    nav_contacts: "Contatos", nav_deals: "Negócios", nav_companies: "Empresas", nav_tasks: "Tarefas",
+    bookmarks_label: "Favoritos",
+    instr_label_0: "Etapa 1 — Fazer login", instr_label_1: "Etapa 2 — Selecionar uma visualização", instr_label_2: "Etapa 3 — Concluir uma tarefa", instr_label_3: "Etapa 4 — Criar uma nota", instr_label_4: "Concluído",
+    instr_text_0: "Faça login no HubSpot e encontre a área <strong>Tarefas</strong> no menu do CRM, depois adicione-a aos favoritos.",
+    instr_text_1: "Selecione uma visualização de tarefas, adicione a coluna <strong>Prioridade</strong> e ordene por prioridade.",
+    instr_text_2: "Abra a primeira tarefa, verifique as notas e o Contrato de Serviços, depois decida como contatar o aluno.",
+    instr_text_3: "Atualize a tarefa, adicione uma nota explicando o que aconteceu e fixe-a para que a equipe possa ver.",
+    instr_text_4: "Você concluiu todo o fluxo da Lista de Ações.",
+    steptab_0: "Fazer login e favoritar", steptab_1: "Selecionar uma visualização", steptab_2: "Concluir uma tarefa", steptab_3: "Criar e fixar uma nota", steptab_4: "Concluído",
+    task_header: "Etapas do fluxo de trabalho",
+    task_0: "Fazer login e favoritar Tarefas", task_1: "Selecionar uma visualização e editar colunas", task_2: "Ver e concluir uma tarefa", task_3: "Criar e fixar uma nota",
+    progress_0: "0 de 4 concluídas", progress_suffix: "de 4 concluídas",
+    p0_title: "Faça login no HubSpot", p0_sub: "Todo consultor começa o dia da mesma forma: fazer login e depois encontrar e favoritar a área Tarefas.",
+    p0_signin_title: "Fazer login", lbl_email: "E-mail Wall Street English", lbl_password: "Senha", btn_signin: "Fazer login",
+    p0_findtasks_title: "Encontre Tarefas no menu do CRM",
+    p0_findtasks_body: "Abra o menu <strong>CRM</strong> na barra lateral esquerda e clique em <strong>Tarefas</strong> — é aqui que você vai trabalhar todos os dias.",
+    crm_contacts: "Contatos", crm_companies: "Empresas", crm_deals: "Negócios", crm_tickets: "Tickets", crm_tasks: "Tarefas",
+    p0_bookmark_title: "Favorite a página",
+    p0_bookmark_body: "Você vai usar Tarefas todos os dias, então favorite-a. Clique no <strong>ícone ☆</strong> no canto superior esquerdo da barra lateral.",
+    toast_login_t: "Login realizado", toast_login_m: "Bem-vindo — agora abra o menu do CRM.",
+    toast_navpicked_t: "Tarefas encontrado", toast_navpicked_m: "Agora favorite esta página para uso diário.",
+    toast_bookmarked_t: "Favoritado", toast_bookmarked_m: "Tarefas agora aparece na sua barra de favoritos.",
+    tl_tab_due: "Vencem hoje", tl_tab_all: "Todas as tarefas", tl_tab_overdue: "Atrasadas", tl_tab_upcoming: "Próximas", tl_tab_unassigned: "Não atribuídas",
+    ph_searchcolleague: "Buscar as tarefas de um colega (ex.: para cobri-lo)", btn_search: "Buscar",
+    btn_editcolumns: "Editar colunas", btn_starttasks: "▶ Iniciar 11 tarefas",
+    th_tasktitle: "Título da tarefa", th_priority: "Prioridade", th_stage: "Estágio da tarefa", th_contacts: "Tarefa → Contatos", th_lastcontacted: "Último contato",
+    row_task1: "Lembrar de reservar a Aula de Redes Sociais", row_task2: "Lembrar de reservar a Aula Complementar", row_task3: "Ativo, não reservado", row_task4: "Fazer follow-up com Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Não iniciada", prio_high: "Alta", prio_medium: "Média", prio_low: "Baixa",
+    toast_colleague_t: "Tarefas do colega adicionadas", toast_colleague_m: "As tarefas atribuídas a ele(a) agora também aparecem na sua lista.",
+    modal_editcolumns: "Editar colunas", modal_editcolumns_hint: "Adicione Prioridade e depois mova-a para perto de Tarefa → Contatos.",
+    btn_cancel: "Cancelar", btn_apply: "Aplicar",
+    toast_colsapplied_t: "Colunas atualizadas", toast_colsapplied_m: "Coluna Prioridade adicionada. Agora ordene por prioridade.",
+    toast_sorted_t: "Ordenado por prioridade", toast_sorted_m: "As tarefas de maior prioridade agora aparecem primeiro.",
+    task_badge: "Tarefa 1/10", btn_reschedule: "Reagendar", btn_complete: "✓ Concluir",
+    lp_about: "Sobre este contato", lbl_phone: "Telefone", lbl_owner: "Proprietário",
+    tab_overview: "Visão geral", tab_activities: "Atividades", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Tarefa: Lembrar de reservar Encounter", ac_overdue: "Atrasada: Jul 14, 2026",
+    ac_tasknotes: "Notas da tarefa: lembre o aluno de reservar seu <strong>Encounter</strong>. Level/Unit/Lesson atuais: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Histórico do WhatsApp", msg_sent: "WhatsApp de marketing enviado", msg_delivered: "Entregue", msg_read: "Lido",
+    p2_quickcheck: "Verificação rápida",
+    p2_question: "O sistema já enviou uma mensagem por WhatsApp ao aluno e ela foi lida, mas ele ainda não reservou. O que você deve fazer?",
+    topt_a: "Enviar outra mensagem de WhatsApp e esperar.",
+    topt_b: "Ligar diretamente para o aluno, já que só a mensagem não funcionou.",
+    topt_c: "Deixar a tarefa — o sistema vai resolvê-la automaticamente.",
+    task_fb_correct: "✓ Correto. Ligar diretamente é a atitude certa quando só a mensagem não funcionou.",
+    task_fb_incorrect: "Não é bem isso — o sistema já tentou enviar mensagem. Escolha a opção em que você contata o aluno pessoalmente.",
+    rc_deals: "Negócios (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Valor: €1,850<br>Estágio do negócio: <strong style='color:var(--text-primary)'>Ativo</strong>",
+    rc_sa: "Contrato de Serviços (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Próximo Encounter", val_none: "Nenhum reservado",
+    toast_taskdone_t: "Tarefa concluída", toast_taskdone_m: "Agora atualize o registro com o que aconteceu.",
+    p3_status_open: "Status: deixada em aberto — não foi possível contatar o aluno",
+    btn_finish: "Finalizar",
+    sub_all: "Todas as atividades", sub_notes: "Notas", sub_emails: "E-mails", sub_calls: "Chamadas",
+    btn_createnote: "📝 Criar uma nota",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Criar uma nota", ph_notetext: "ex.: Aluno viajando, sem contato até 30 de julho", lbl_synccourse: "Sincronizar com Course",
+    btn_savenote: "Salvar nota",
+    note_by: "Nota sua", note_justnow: "Agora mesmo",
+    note_actions_pin: "📌 Fixar", note_actions_unpin: "Desafixar", note_actions_delete: "Excluir",
+    toast_notesaved_t: "Nota salva", toast_notesaved_m: "Agora fixe-a para que toda a equipe possa ver.",
+    toast_pinned_t: "Atividade fixada com sucesso", toast_pinned_m: "A nota agora está no topo do fio de atividades.",
+    p3_unpin_hint: "Quando o aluno voltar a responder, você pode desafixar ou excluir esta nota no mesmo menu.",
+    p4_title: "Bom trabalho!",
+    p4_sub: "Você concluiu todo o fluxo da Lista de Ações, do login até o fechamento do ciclo com uma nota fixada.",
+    p4_code_intro: "Copie este código na Verificação de Conhecimento para confirmar que você concluiu o passo a passo:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Reiniciar",
+  },
+  ru: {
+    title: "Песочница HubSpot — Практика по списку действий",
+    nav_contacts: "Контакты", nav_deals: "Сделки", nav_companies: "Компании", nav_tasks: "Задачи",
+    bookmarks_label: "Закладки",
+    instr_label_0: "Шаг 1 — Войти", instr_label_1: "Шаг 2 — Выбрать представление", instr_label_2: "Шаг 3 — Выполнить задачу", instr_label_3: "Шаг 4 — Создать заметку", instr_label_4: "Готово",
+    instr_text_0: "Войдите в HubSpot, найдите раздел <strong>Задачи</strong> в меню CRM и добавьте его в закладки.",
+    instr_text_1: "Выберите представление задач, добавьте столбец <strong>Приоритет</strong> и отсортируйте по приоритету.",
+    instr_text_2: "Откройте первую задачу, проверьте заметки и Договор об услугах, затем решите, как связаться со студентом.",
+    instr_text_3: "Обновите задачу, добавьте заметку с описанием произошедшего и закрепите её, чтобы команда могла её видеть.",
+    instr_text_4: "Вы завершили весь процесс работы со списком действий.",
+    steptab_0: "Войти и добавить в закладки", steptab_1: "Выбрать представление", steptab_2: "Выполнить задачу", steptab_3: "Создать и закрепить заметку", steptab_4: "Готово",
+    task_header: "Шаги процесса",
+    task_0: "Войти и добавить Задачи в закладки", task_1: "Выбрать представление и изменить столбцы", task_2: "Просмотреть и выполнить задачу", task_3: "Создать и закрепить заметку",
+    progress_0: "0 из 4 выполнено", progress_suffix: "из 4 выполнено",
+    p0_title: "Войдите в HubSpot", p0_sub: "Каждый консультант начинает день одинаково: войти в систему, затем найти раздел «Задачи» и добавить его в закладки.",
+    p0_signin_title: "Вход", lbl_email: "Электронная почта Wall Street English", lbl_password: "Пароль", btn_signin: "Войти",
+    p0_findtasks_title: "Найдите Задачи в меню CRM",
+    p0_findtasks_body: "Откройте меню <strong>CRM</strong> в левой боковой панели и нажмите <strong>Задачи</strong> — здесь вы будете работать каждый день.",
+    crm_contacts: "Контакты", crm_companies: "Компании", crm_deals: "Сделки", crm_tickets: "Тикеты", crm_tasks: "Задачи",
+    p0_bookmark_title: "Добавьте страницу в закладки",
+    p0_bookmark_body: "Вы будете пользоваться разделом «Задачи» каждый день, поэтому добавьте его в закладки. Нажмите на <strong>значок ☆</strong> в левом верхнем углу боковой панели.",
+    toast_login_t: "Вход выполнен", toast_login_m: "Добро пожаловать — теперь откройте меню CRM.",
+    toast_navpicked_t: "Раздел «Задачи» найден", toast_navpicked_m: "Теперь добавьте эту страницу в закладки для ежедневного использования.",
+    toast_bookmarked_t: "Добавлено в закладки", toast_bookmarked_m: "Раздел «Задачи» теперь отображается на панели закладок.",
+    tl_tab_due: "На сегодня", tl_tab_all: "Все задачи", tl_tab_overdue: "Просроченные", tl_tab_upcoming: "Предстоящие", tl_tab_unassigned: "Без исполнителя",
+    ph_searchcolleague: "Найти задачи коллеги (например, чтобы подменить его)", btn_search: "Поиск",
+    btn_editcolumns: "Изменить столбцы", btn_starttasks: "▶ Начать (11 задач)",
+    th_tasktitle: "Название задачи", th_priority: "Приоритет", th_stage: "Этап задачи", th_contacts: "Задача → Контакты", th_lastcontacted: "Последний контакт",
+    row_task1: "Напомнить забронировать урок по соцсетям", row_task2: "Напомнить забронировать дополнительное занятие", row_task3: "Активен, не забронировано", row_task4: "Связаться с Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Не начато", prio_high: "Высокий", prio_medium: "Средний", prio_low: "Низкий",
+    toast_colleague_t: "Задачи коллеги добавлены", toast_colleague_m: "Назначенные ему задачи теперь также отображаются в вашем списке.",
+    modal_editcolumns: "Изменить столбцы", modal_editcolumns_hint: "Добавьте «Приоритет», затем переместите его рядом с «Задача → Контакты».",
+    btn_cancel: "Отмена", btn_apply: "Применить",
+    toast_colsapplied_t: "Столбцы обновлены", toast_colsapplied_m: "Столбец «Приоритет» добавлен. Теперь отсортируйте по приоритету.",
+    toast_sorted_t: "Отсортировано по приоритету", toast_sorted_m: "Задачи с наивысшим приоритетом теперь отображаются первыми.",
+    task_badge: "Задача 1/10", btn_reschedule: "Перенести", btn_complete: "✓ Завершить",
+    lp_about: "О контакте", lbl_phone: "Телефон", lbl_owner: "Владелец",
+    tab_overview: "Обзор", tab_activities: "Активность", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Задача: напомнить забронировать Encounter", ac_overdue: "Просрочено: Jul 14, 2026",
+    ac_tasknotes: "Заметки к задаче: напомните студенту забронировать его <strong>Encounter</strong>. Текущий Level/Unit/Lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "История WhatsApp", msg_sent: "Маркетинговое сообщение WhatsApp отправлено", msg_delivered: "Доставлено", msg_read: "Прочитано",
+    p2_quickcheck: "Быстрая проверка",
+    p2_question: "Система уже отправила студенту сообщение в WhatsApp, и оно было прочитано, но бронирования до сих пор нет. Что вам следует сделать?",
+    topt_a: "Отправить ещё одно сообщение в WhatsApp и подождать.",
+    topt_b: "Позвонить студенту напрямую, поскольку одного сообщения оказалось недостаточно.",
+    topt_c: "Оставить задачу — система решит её автоматически.",
+    task_fb_correct: "✓ Верно. Позвонить напрямую — правильное решение, если одно сообщение не сработало.",
+    task_fb_incorrect: "Не совсем — система уже пыталась написать сообщение. Выберите вариант, где вы лично связываетесь со студентом.",
+    rc_deals: "Сделки (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Сумма: €1,850<br>Этап сделки: <strong style='color:var(--text-primary)'>Активна</strong>",
+    rc_sa: "Договор об услугах (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Следующий Encounter", val_none: "Ничего не забронировано",
+    toast_taskdone_t: "Задача выполнена", toast_taskdone_m: "Теперь обновите запись, указав, что произошло.",
+    p3_status_open: "Статус: оставлено открытым — не удалось связаться со студентом",
+    btn_finish: "Завершить",
+    sub_all: "Вся активность", sub_notes: "Заметки", sub_emails: "Письма", sub_calls: "Звонки",
+    btn_createnote: "📝 Создать заметку",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Создать заметку", ph_notetext: "например, «Студент недоступен, связи не будет до 30 июля»", lbl_synccourse: "Синхронизировать с Course",
+    btn_savenote: "Сохранить заметку",
+    note_by: "Заметка от вас", note_justnow: "Только что",
+    note_actions_pin: "📌 Закрепить", note_actions_unpin: "Открепить", note_actions_delete: "Удалить",
+    toast_notesaved_t: "Заметка сохранена", toast_notesaved_m: "Теперь закрепите её, чтобы вся команда могла её видеть.",
+    toast_pinned_t: "Активность успешно закреплена", toast_pinned_m: "Заметка теперь находится вверху ленты.",
+    p3_unpin_hint: "Когда студент снова выйдет на связь, вы сможете открепить или удалить эту заметку из того же меню.",
+    p4_title: "Отличная работа!",
+    p4_sub: "Вы завершили весь процесс работы со списком действий — от входа в систему до закрытия цикла закреплённой заметкой.",
+    p4_code_intro: "Скопируйте этот код в раздел проверки знаний, чтобы подтвердить прохождение практикума:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Начать заново",
+  },
+  tr: {
+    title: "HubSpot Sandbox — Eylem Listesi Alıştırması",
+    nav_contacts: "Kişiler", nav_deals: "Anlaşmalar", nav_companies: "Şirketler", nav_tasks: "Görevler",
+    bookmarks_label: "Yer İmleri",
+    instr_label_0: "Adım 1 — Giriş yapın", instr_label_1: "Adım 2 — Bir görünüm seçin", instr_label_2: "Adım 3 — Bir görevi tamamlayın", instr_label_3: "Adım 4 — Bir not oluşturun", instr_label_4: "Tamamlandı",
+    instr_text_0: "HubSpot'a giriş yapın, CRM menüsünden <strong>Görevler</strong> alanını bulun ve yer imlerine ekleyin.",
+    instr_text_1: "Bir görev görünümü seçin, <strong>Öncelik</strong> sütununu ekleyin ve önceliğe göre sıralayın.",
+    instr_text_2: "İlk görevi açın, notları ve Hizmet Sözleşmesini kontrol edin, ardından öğrenciyle nasıl iletişime geçeceğinize karar verin.",
+    instr_text_3: "Görevi güncelleyin, ne olduğunu açıklayan bir not ekleyin ve ekip görebilsin diye sabitleyin.",
+    instr_text_4: "Eylem Listesi sürecinin tamamını tamamladınız.",
+    steptab_0: "Giriş yap ve yer imine ekle", steptab_1: "Bir görünüm seçin", steptab_2: "Bir görevi tamamlayın", steptab_3: "Not oluştur ve sabitle", steptab_4: "Tamamlandı",
+    task_header: "İş akışı adımları",
+    task_0: "Giriş yap ve Görevleri yer imine ekle", task_1: "Bir görünüm seçin ve sütunları düzenleyin", task_2: "Bir görevi görüntüleyin ve tamamlayın", task_3: "Not oluştur ve sabitle",
+    progress_0: "4 görevden 0'ı tamamlandı", progress_suffix: "görevden tamamlandı",
+    p0_title: "HubSpot'a giriş yapın", p0_sub: "Her danışman güne aynı şekilde başlar: giriş yapmak, ardından Görevler alanını bulup yer imlerine eklemek.",
+    p0_signin_title: "Giriş yap", lbl_email: "Wall Street English e-posta adresi", lbl_password: "Şifre", btn_signin: "Giriş yap",
+    p0_findtasks_title: "CRM menüsünde Görevleri bulun",
+    p0_findtasks_body: "Sol kenar çubuğundaki <strong>CRM</strong> menüsünü açın ve <strong>Görevler</strong>'e tıklayın — her gün burada çalışacaksınız.",
+    crm_contacts: "Kişiler", crm_companies: "Şirketler", crm_deals: "Anlaşmalar", crm_tickets: "Talepler", crm_tasks: "Görevler",
+    p0_bookmark_title: "Sayfayı yer imlerine ekleyin",
+    p0_bookmark_body: "Görevler'i her gün kullanacaksınız, bu yüzden yer imlerine ekleyin. Sol kenar çubuğunun sol üstündeki <strong>☆ yer imi simgesine</strong> tıklayın.",
+    toast_login_t: "Giriş yapıldı", toast_login_m: "Hoş geldiniz — şimdi CRM menüsünü açın.",
+    toast_navpicked_t: "Görevler bulundu", toast_navpicked_m: "Şimdi bu sayfayı günlük kullanım için yer imlerine ekleyin.",
+    toast_bookmarked_t: "Yer imlerine eklendi", toast_bookmarked_m: "Görevler artık yer imleri çubuğunuzda görünüyor.",
+    tl_tab_due: "Bugün son tarih", tl_tab_all: "Tüm görevler", tl_tab_overdue: "Süresi geçmiş", tl_tab_upcoming: "Yaklaşan", tl_tab_unassigned: "Atanmamış",
+    ph_searchcolleague: "Bir meslektaşınızın görevlerini arayın (örn. onun yerine bakmak için)", btn_search: "Ara",
+    btn_editcolumns: "Sütunları düzenle", btn_starttasks: "▶ 11 görevi başlat",
+    th_tasktitle: "Görev başlığı", th_priority: "Öncelik", th_stage: "Görev aşaması", th_contacts: "Görev → Kişiler", th_lastcontacted: "Son iletişim",
+    row_task1: "Sosyal Medya Dersi rezervasyonunu hatırlat", row_task2: "Tamamlayıcı Ders rezervasyonunu hatırlat", row_task3: "Aktif, rezervasyon yapılmadı", row_task4: "Max Lange ile takip et",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Başlanmadı", prio_high: "Yüksek", prio_medium: "Orta", prio_low: "Düşük",
+    toast_colleague_t: "Meslektaşın görevleri eklendi", toast_colleague_m: "Kendisine atanan görevler artık listenizde de görünüyor.",
+    modal_editcolumns: "Sütunları düzenle", modal_editcolumns_hint: "Öncelik'i ekleyin, ardından Görev → Kişiler'in yanına taşıyın.",
+    btn_cancel: "İptal", btn_apply: "Uygula",
+    toast_colsapplied_t: "Sütunlar güncellendi", toast_colsapplied_m: "Öncelik sütunu eklendi. Şimdi önceliğe göre sıralayın.",
+    toast_sorted_t: "Önceliğe göre sıralandı", toast_sorted_m: "En yüksek öncelikli görevler artık ilk sırada görünüyor.",
+    task_badge: "Görev 1/10", btn_reschedule: "Yeniden planla", btn_complete: "✓ Tamamla",
+    lp_about: "Bu kişi hakkında", lbl_phone: "Telefon", lbl_owner: "Sahip",
+    tab_overview: "Genel bakış", tab_activities: "Etkinlikler", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Görev: Encounter rezervasyonunu hatırlat", ac_overdue: "Süresi geçti: Jul 14, 2026",
+    ac_tasknotes: "Görev notları: öğrenciye <strong>Encounter</strong>'ını rezerve etmesini hatırlatın. Güncel Level/Unit/Lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "WhatsApp geçmişi", msg_sent: "Pazarlama WhatsApp mesajı gönderildi", msg_delivered: "İletildi", msg_read: "Okundu",
+    p2_quickcheck: "Hızlı kontrol",
+    p2_question: "Sistem öğrenciye zaten WhatsApp'tan mesaj gönderdi ve mesaj okundu, ancak hâlâ rezervasyon yapmadı. Ne yapmalısınız?",
+    topt_a: "Tekrar bir WhatsApp mesajı gönderip beklemek.",
+    topt_b: "Sadece mesaj yeterli olmadığı için öğrenciyi doğrudan aramak.",
+    topt_c: "Görevi bırakmak — sistem otomatik olarak çözecektir.",
+    task_fb_correct: "✓ Doğru. Yalnızca mesaj işe yaramadığında doğrudan aramak doğru harekettir.",
+    task_fb_incorrect: "Tam olarak değil — sistem zaten mesaj göndermeyi denedi. Öğrenciyle bizzat iletişime geçtiğiniz seçeneği seçin.",
+    rc_deals: "Anlaşmalar (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Tutar: €1,850<br>Anlaşma Aşaması: <strong style='color:var(--text-primary)'>Aktif</strong>",
+    rc_sa: "Hizmet Sözleşmesi (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Sonraki Encounter", val_none: "Rezervasyon yok",
+    toast_taskdone_t: "Görev tamamlandı", toast_taskdone_m: "Şimdi kaydı ne olduğuyla güncelleyin.",
+    p3_status_open: "Durum: açık bırakıldı — öğrenciye ulaşılamadı",
+    btn_finish: "Bitir",
+    sub_all: "Tüm etkinlikler", sub_notes: "Notlar", sub_emails: "E-postalar", sub_calls: "Aramalar",
+    btn_createnote: "📝 Not oluştur",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Not oluştur", ph_notetext: "örn. Öğrenci uzakta, 30 Temmuz'a kadar iletişim yok", lbl_synccourse: "Course ile senkronize et",
+    btn_savenote: "Notu kaydet",
+    note_by: "Sizin notunuz", note_justnow: "Az önce",
+    note_actions_pin: "📌 Sabitle", note_actions_unpin: "Sabitlemeyi kaldır", note_actions_delete: "Sil",
+    toast_notesaved_t: "Not kaydedildi", toast_notesaved_m: "Şimdi tüm ekip görebilsin diye sabitleyin.",
+    toast_pinned_t: "Etkinlik başarıyla sabitlendi", toast_pinned_m: "Not artık iş akışının en üstünde.",
+    p3_unpin_hint: "Öğrenciyle tekrar iletişime geçildiğinde, bu notu aynı menüden sabitlikten kaldırabilir veya silebilirsiniz.",
+    p4_title: "Aferin!",
+    p4_sub: "Giriş yapmaktan sabitlenmiş bir notla döngüyü kapatmaya kadar Eylem Listesi sürecinin tamamını tamamladınız.",
+    p4_code_intro: "Bu turu tamamladığınızı doğrulamak için bu kodu Bilgi Kontrolüne kopyalayın:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Yeniden başlat",
+  },
+  cs: {
+    title: "HubSpot Sandbox — Procvičování seznamu akcí",
+    nav_contacts: "Kontakty", nav_deals: "Obchody", nav_companies: "Společnosti", nav_tasks: "Úkoly",
+    bookmarks_label: "Záložky",
+    instr_label_0: "Krok 1 — Přihlášení", instr_label_1: "Krok 2 — Vybrat zobrazení", instr_label_2: "Krok 3 — Dokončit úkol", instr_label_3: "Krok 4 — Vytvořit poznámku", instr_label_4: "Dokončeno",
+    instr_text_0: "Přihlaste se do HubSpotu, najděte v menu CRM sekci <strong>Úkoly</strong> a přidejte ji do záložek.",
+    instr_text_1: "Vyberte zobrazení úkolů, přidejte sloupec <strong>Priorita</strong> a seřaďte podle priority.",
+    instr_text_2: "Otevřete první úkol, zkontrolujte poznámky a Smlouvu o poskytování služeb a rozhodněte, jak studenta kontaktovat.",
+    instr_text_3: "Aktualizujte úkol, přidejte poznámku s vysvětlením, co se stalo, a připněte ji, aby ji viděl celý tým.",
+    instr_text_4: "Dokončili jste celý postup práce se seznamem akcí.",
+    steptab_0: "Přihlásit se a přidat do záložek", steptab_1: "Vybrat zobrazení", steptab_2: "Dokončit úkol", steptab_3: "Vytvořit a připnout poznámku", steptab_4: "Dokončeno",
+    task_header: "Kroky postupu",
+    task_0: "Přihlásit se a přidat Úkoly do záložek", task_1: "Vybrat zobrazení a upravit sloupce", task_2: "Zobrazit a dokončit úkol", task_3: "Vytvořit a připnout poznámku",
+    progress_0: "0 ze 4 dokončeno", progress_suffix: "ze 4 dokončeno",
+    p0_title: "Přihlaste se do HubSpotu", p0_sub: "Každý konzultant začíná den stejně: přihlásit se, poté najít a přidat do záložek sekci Úkoly.",
+    p0_signin_title: "Přihlášení", lbl_email: "E-mail Wall Street English", lbl_password: "Heslo", btn_signin: "Přihlásit se",
+    p0_findtasks_title: "Najděte Úkoly v menu CRM",
+    p0_findtasks_body: "Otevřete menu <strong>CRM</strong> v levém postranním panelu a klikněte na <strong>Úkoly</strong> — zde budete pracovat každý den.",
+    crm_contacts: "Kontakty", crm_companies: "Společnosti", crm_deals: "Obchody", crm_tickets: "Tickety", crm_tasks: "Úkoly",
+    p0_bookmark_title: "Přidejte stránku do záložek",
+    p0_bookmark_body: "Úkoly budete používat každý den, proto si je přidejte do záložek. Klikněte na <strong>ikonu ☆</strong> vlevo nahoře v postranním panelu.",
+    toast_login_t: "Přihlášeno", toast_login_m: "Vítejte — nyní otevřete menu CRM.",
+    toast_navpicked_t: "Úkoly nalezeny", toast_navpicked_m: "Nyní si tuto stránku přidejte do záložek pro každodenní použití.",
+    toast_bookmarked_t: "Přidáno do záložek", toast_bookmarked_m: "Úkoly se nyní zobrazují na liště záložek.",
+    tl_tab_due: "Dnes splatné", tl_tab_all: "Všechny úkoly", tl_tab_overdue: "Po termínu", tl_tab_upcoming: "Nadcházející", tl_tab_unassigned: "Nepřiřazené",
+    ph_searchcolleague: "Vyhledat úkoly kolegy (např. pro zastupování)", btn_search: "Hledat",
+    btn_editcolumns: "Upravit sloupce", btn_starttasks: "▶ Spustit 11 úkolů",
+    th_tasktitle: "Název úkolu", th_priority: "Priorita", th_stage: "Fáze úkolu", th_contacts: "Úkol → Kontakty", th_lastcontacted: "Poslední kontakt",
+    row_task1: "Připomenout rezervaci lekce Sociální sítě", row_task2: "Připomenout rezervaci doplňkové lekce", row_task3: "Aktivní, nerezervováno", row_task4: "Kontaktovat Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Nezahájeno", prio_high: "Vysoká", prio_medium: "Střední", prio_low: "Nízká",
+    toast_colleague_t: "Úkoly kolegy přidány", toast_colleague_m: "Jeho přiřazené úkoly se nyní zobrazují i ve vašem seznamu.",
+    modal_editcolumns: "Upravit sloupce", modal_editcolumns_hint: "Přidejte Prioritu a poté ji přesuňte vedle Úkol → Kontakty.",
+    btn_cancel: "Zrušit", btn_apply: "Použít",
+    toast_colsapplied_t: "Sloupce aktualizovány", toast_colsapplied_m: "Sloupec Priorita přidán. Nyní seřaďte podle priority.",
+    toast_sorted_t: "Seřazeno podle priority", toast_sorted_m: "Úkoly s nejvyšší prioritou se nyní zobrazují první.",
+    task_badge: "Úkol 1/10", btn_reschedule: "Přeplánovat", btn_complete: "✓ Dokončit",
+    lp_about: "O tomto kontaktu", lbl_phone: "Telefon", lbl_owner: "Vlastník",
+    tab_overview: "Přehled", tab_activities: "Aktivity", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Úkol: Připomenout rezervaci Encounter", ac_overdue: "Po termínu: Jul 14, 2026",
+    ac_tasknotes: "Poznámky k úkolu: připomeňte studentovi, aby si rezervoval svůj <strong>Encounter</strong>. Aktuální Level/Unit/Lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Historie WhatsApp", msg_sent: "Marketingová zpráva WhatsApp odeslána", msg_delivered: "Doručeno", msg_read: "Přečteno",
+    p2_quickcheck: "Rychlá kontrola",
+    p2_question: "Systém již studentovi napsal přes WhatsApp a zpráva byla přečtena, ale rezervaci stále nemá. Co byste měli udělat?",
+    topt_a: "Poslat další zprávu na WhatsApp a počkat.",
+    topt_b: "Zavolat studentovi přímo, protože samotná zpráva nezabrala.",
+    topt_c: "Nechat úkol být — systém ho vyřeší automaticky.",
+    task_fb_correct: "✓ Správně. Přímé zavolání je správný krok, pokud samotná zpráva nezabrala.",
+    task_fb_incorrect: "Ne tak docela — systém se již pokusil napsat zprávu. Vyberte možnost, kdy studenta kontaktujete osobně.",
+    rc_deals: "Obchody (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Částka: €1,850<br>Fáze obchodu: <strong style='color:var(--text-primary)'>Aktivní</strong>",
+    rc_sa: "Smlouva o poskytování služeb (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Další Encounter", val_none: "Nic nerezervováno",
+    toast_taskdone_t: "Úkol dokončen", toast_taskdone_m: "Nyní aktualizujte záznam o tom, co se stalo.",
+    p3_status_open: "Stav: ponecháno otevřené — studenta se nepodařilo zastihnout",
+    btn_finish: "Dokončit",
+    sub_all: "Všechny aktivity", sub_notes: "Poznámky", sub_emails: "E-maily", sub_calls: "Hovory",
+    btn_createnote: "📝 Vytvořit poznámku",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Vytvořit poznámku", ph_notetext: "např. Student je pryč, bez kontaktu do 30. července", lbl_synccourse: "Synchronizovat s Course",
+    btn_savenote: "Uložit poznámku",
+    note_by: "Poznámka od vás", note_justnow: "Právě teď",
+    note_actions_pin: "📌 Připnout", note_actions_unpin: "Odepnout", note_actions_delete: "Odstranit",
+    toast_notesaved_t: "Poznámka uložena", toast_notesaved_m: "Nyní ji připněte, aby ji viděl celý tým.",
+    toast_pinned_t: "Aktivita byla úspěšně připnuta", toast_pinned_m: "Poznámka je nyní nahoře ve vlákně.",
+    p3_unpin_hint: "Jakmile bude student opět v kontaktu, můžete tuto poznámku odepnout nebo odstranit ze stejné nabídky.",
+    p4_title: "Skvělá práce!",
+    p4_sub: "Dokončili jste celý postup práce se seznamem akcí — od přihlášení až po uzavření celého cyklu připnutou poznámkou.",
+    p4_code_intro: "Zkopírujte tento kód do Kontroly znalostí, abyste potvrdili, že jste dokončili celý postup:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Restartovat",
+  },
+  id: {
+    title: "Sandbox HubSpot — Latihan Daftar Tindakan",
+    nav_contacts: "Kontak", nav_deals: "Kesepakatan", nav_companies: "Perusahaan", nav_tasks: "Tugas",
+    bookmarks_label: "Markah",
+    instr_label_0: "Langkah 1 — Masuk", instr_label_1: "Langkah 2 — Pilih tampilan", instr_label_2: "Langkah 3 — Selesaikan tugas", instr_label_3: "Langkah 4 — Buat catatan", instr_label_4: "Selesai",
+    instr_text_0: "Masuk ke HubSpot dan temukan area <strong>Tugas</strong> di menu CRM, lalu tandai sebagai markah.",
+    instr_text_1: "Pilih tampilan tugas, tambahkan kolom <strong>Prioritas</strong>, lalu urutkan berdasarkan prioritas.",
+    instr_text_2: "Buka tugas pertama, periksa catatan dan Perjanjian Layanan, lalu putuskan cara menghubungi siswa.",
+    instr_text_3: "Perbarui tugas, tambahkan catatan yang menjelaskan apa yang terjadi, lalu sematkan agar tim bisa melihatnya.",
+    instr_text_4: "Anda telah menyelesaikan seluruh alur kerja Daftar Tindakan.",
+    steptab_0: "Masuk & tandai markah", steptab_1: "Pilih tampilan", steptab_2: "Selesaikan tugas", steptab_3: "Buat & sematkan catatan", steptab_4: "Selesai",
+    task_header: "Langkah-langkah alur kerja",
+    task_0: "Masuk & tandai Tugas sebagai markah", task_1: "Pilih tampilan & edit kolom", task_2: "Lihat & selesaikan tugas", task_3: "Buat & sematkan catatan",
+    progress_0: "0 dari 4 selesai", progress_suffix: "dari 4 selesai",
+    p0_title: "Masuk ke HubSpot", p0_sub: "Setiap konsultan memulai hari dengan cara yang sama: masuk, lalu menemukan dan menandai area Tugas sebagai markah.",
+    p0_signin_title: "Masuk", lbl_email: "Email Wall Street English", lbl_password: "Kata sandi", btn_signin: "Masuk",
+    p0_findtasks_title: "Temukan Tugas di menu CRM",
+    p0_findtasks_body: "Buka menu <strong>CRM</strong> di bilah sisi kiri dan klik <strong>Tugas</strong> — di sinilah Anda akan bekerja setiap hari.",
+    crm_contacts: "Kontak", crm_companies: "Perusahaan", crm_deals: "Kesepakatan", crm_tickets: "Tiket", crm_tasks: "Tugas",
+    p0_bookmark_title: "Tandai halaman ini",
+    p0_bookmark_body: "Anda akan menggunakan Tugas setiap hari, jadi tandai sebagai markah. Klik <strong>ikon markah ☆</strong> di pojok kiri atas bilah sisi.",
+    toast_login_t: "Berhasil masuk", toast_login_m: "Selamat datang — sekarang buka menu CRM.",
+    toast_navpicked_t: "Tugas ditemukan", toast_navpicked_m: "Sekarang tandai halaman ini untuk penggunaan harian.",
+    toast_bookmarked_t: "Ditandai sebagai markah", toast_bookmarked_m: "Tugas sekarang muncul di bilah markah Anda.",
+    tl_tab_due: "Jatuh tempo hari ini", tl_tab_all: "Semua tugas", tl_tab_overdue: "Terlambat", tl_tab_upcoming: "Akan datang", tl_tab_unassigned: "Belum ditugaskan",
+    ph_searchcolleague: "Cari tugas rekan kerja (misalnya untuk menggantikannya)", btn_search: "Cari",
+    btn_editcolumns: "Edit kolom", btn_starttasks: "▶ Mulai 11 tugas",
+    th_tasktitle: "Judul tugas", th_priority: "Prioritas", th_stage: "Tahap tugas", th_contacts: "Tugas → Kontak", th_lastcontacted: "Kontak terakhir",
+    row_task1: "Ingatkan untuk memesan Kelas Media Sosial", row_task2: "Ingatkan untuk memesan Kelas Tambahan", row_task3: "Aktif, belum dipesan", row_task4: "Tindak lanjuti Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Belum dimulai", prio_high: "Tinggi", prio_medium: "Sedang", prio_low: "Rendah",
+    toast_colleague_t: "Tugas rekan kerja ditambahkan", toast_colleague_m: "Tugas yang ditugaskan kepadanya kini juga muncul di daftar Anda.",
+    modal_editcolumns: "Edit kolom", modal_editcolumns_hint: "Tambahkan Prioritas, lalu pindahkan ke samping Tugas → Kontak.",
+    btn_cancel: "Batal", btn_apply: "Terapkan",
+    toast_colsapplied_t: "Kolom diperbarui", toast_colsapplied_m: "Kolom Prioritas ditambahkan. Sekarang urutkan berdasarkan prioritas.",
+    toast_sorted_t: "Diurutkan berdasarkan prioritas", toast_sorted_m: "Tugas dengan prioritas tertinggi kini muncul lebih dulu.",
+    task_badge: "Tugas 1/10", btn_reschedule: "Jadwalkan ulang", btn_complete: "✓ Selesaikan",
+    lp_about: "Tentang kontak ini", lbl_phone: "Telepon", lbl_owner: "Pemilik",
+    tab_overview: "Ringkasan", tab_activities: "Aktivitas", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Tugas: Ingatkan untuk memesan Encounter", ac_overdue: "Terlambat: Jul 14, 2026",
+    ac_tasknotes: "Catatan tugas: ingatkan siswa untuk memesan <strong>Encounter</strong>-nya. Level/Unit/Lesson saat ini: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Riwayat WhatsApp", msg_sent: "WhatsApp pemasaran terkirim", msg_delivered: "Terkirim", msg_read: "Dibaca",
+    p2_quickcheck: "Pemeriksaan cepat",
+    p2_question: "Sistem sudah mengirim pesan WhatsApp ke siswa dan pesan itu sudah dibaca, tetapi mereka belum juga memesan. Apa yang harus Anda lakukan?",
+    topt_a: "Kirim pesan WhatsApp lagi dan tunggu.",
+    topt_b: "Telepon siswa secara langsung, karena pesan saja belum berhasil.",
+    topt_c: "Biarkan tugas ini — sistem akan menyelesaikannya secara otomatis.",
+    task_fb_correct: "✓ Benar. Menelepon langsung adalah langkah yang tepat setelah pesan saja tidak berhasil.",
+    task_fb_incorrect: "Belum tepat — sistem sudah mencoba mengirim pesan. Pilih opsi di mana Anda menghubungi siswa secara langsung.",
+    rc_deals: "Kesepakatan (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Jumlah: €1,850<br>Tahap Kesepakatan: <strong style='color:var(--text-primary)'>Aktif</strong>",
+    rc_sa: "Perjanjian Layanan (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Encounter Berikutnya", val_none: "Belum ada yang dipesan",
+    toast_taskdone_t: "Tugas selesai", toast_taskdone_m: "Sekarang perbarui catatan dengan apa yang terjadi.",
+    p3_status_open: "Status: dibiarkan terbuka — tidak dapat menghubungi siswa",
+    btn_finish: "Selesai",
+    sub_all: "Semua aktivitas", sub_notes: "Catatan", sub_emails: "Email", sub_calls: "Panggilan",
+    btn_createnote: "📝 Buat catatan",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Buat catatan", ph_notetext: "misalnya, Siswa sedang pergi, tidak ada kontak hingga 30 Juli", lbl_synccourse: "Sinkronkan ke Course",
+    btn_savenote: "Simpan catatan",
+    note_by: "Catatan dari Anda", note_justnow: "Baru saja",
+    note_actions_pin: "📌 Sematkan", note_actions_unpin: "Batalkan sematan", note_actions_delete: "Hapus",
+    toast_notesaved_t: "Catatan disimpan", toast_notesaved_m: "Sekarang sematkan agar seluruh tim dapat melihatnya.",
+    toast_pinned_t: "Aktivitas berhasil disematkan", toast_pinned_m: "Catatan kini berada di bagian atas alur.",
+    p3_unpin_hint: "Setelah siswa kembali dapat dihubungi, Anda dapat membatalkan sematan atau menghapus catatan ini dari menu yang sama.",
+    p4_title: "Kerja bagus!",
+    p4_sub: "Anda telah menyelesaikan seluruh alur kerja Daftar Tindakan, mulai dari masuk hingga menutup siklus dengan catatan yang disematkan.",
+    p4_code_intro: "Salin kode ini ke Pemeriksaan Pengetahuan untuk mengonfirmasi Anda telah menyelesaikan latihan ini:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Mulai ulang",
+  },
+  vi: {
+    title: "Sandbox HubSpot — Luyện tập Danh sách Hành động",
+    nav_contacts: "Liên hệ", nav_deals: "Giao dịch", nav_companies: "Công ty", nav_tasks: "Nhiệm vụ",
+    bookmarks_label: "Dấu trang",
+    instr_label_0: "Bước 1 — Đăng nhập", instr_label_1: "Bước 2 — Chọn chế độ xem", instr_label_2: "Bước 3 — Hoàn thành một nhiệm vụ", instr_label_3: "Bước 4 — Tạo ghi chú", instr_label_4: "Hoàn thành",
+    instr_text_0: "Đăng nhập vào HubSpot, tìm mục <strong>Nhiệm vụ</strong> trong menu CRM, rồi lưu vào dấu trang.",
+    instr_text_1: "Chọn một chế độ xem nhiệm vụ, thêm cột <strong>Mức độ ưu tiên</strong> và sắp xếp theo mức độ ưu tiên.",
+    instr_text_2: "Mở nhiệm vụ đầu tiên, kiểm tra ghi chú và Hợp đồng Dịch vụ, rồi quyết định cách liên hệ với học viên.",
+    instr_text_3: "Cập nhật nhiệm vụ, thêm ghi chú giải thích những gì đã xảy ra, rồi ghim lại để cả nhóm có thể xem.",
+    instr_text_4: "Bạn đã hoàn thành toàn bộ quy trình Danh sách Hành động.",
+    steptab_0: "Đăng nhập & lưu dấu trang", steptab_1: "Chọn chế độ xem", steptab_2: "Hoàn thành nhiệm vụ", steptab_3: "Tạo & ghim ghi chú", steptab_4: "Hoàn thành",
+    task_header: "Các bước trong quy trình",
+    task_0: "Đăng nhập & lưu Nhiệm vụ vào dấu trang", task_1: "Chọn chế độ xem & chỉnh sửa cột", task_2: "Xem & hoàn thành một nhiệm vụ", task_3: "Tạo & ghim ghi chú",
+    progress_0: "Đã hoàn thành 0/4", progress_suffix: "đã hoàn thành trên 4",
+    p0_title: "Đăng nhập vào HubSpot", p0_sub: "Mọi tư vấn viên đều bắt đầu ngày làm việc theo cùng một cách: đăng nhập, sau đó tìm và lưu dấu trang cho mục Nhiệm vụ.",
+    p0_signin_title: "Đăng nhập", lbl_email: "Email Wall Street English", lbl_password: "Mật khẩu", btn_signin: "Đăng nhập",
+    p0_findtasks_title: "Tìm Nhiệm vụ trong menu CRM",
+    p0_findtasks_body: "Mở menu <strong>CRM</strong> ở thanh bên trái và nhấp vào <strong>Nhiệm vụ</strong> — đây là nơi bạn sẽ làm việc mỗi ngày.",
+    crm_contacts: "Liên hệ", crm_companies: "Công ty", crm_deals: "Giao dịch", crm_tickets: "Phiếu hỗ trợ", crm_tasks: "Nhiệm vụ",
+    p0_bookmark_title: "Lưu trang này vào dấu trang",
+    p0_bookmark_body: "Bạn sẽ dùng Nhiệm vụ mỗi ngày, vì vậy hãy lưu vào dấu trang. Nhấp vào <strong>biểu tượng dấu trang ☆</strong> ở góc trên bên trái của thanh bên.",
+    toast_login_t: "Đã đăng nhập", toast_login_m: "Chào mừng — bây giờ hãy mở menu CRM.",
+    toast_navpicked_t: "Đã tìm thấy Nhiệm vụ", toast_navpicked_m: "Bây giờ hãy lưu trang này vào dấu trang để dùng hằng ngày.",
+    toast_bookmarked_t: "Đã lưu dấu trang", toast_bookmarked_m: "Nhiệm vụ hiện đã xuất hiện trên thanh dấu trang của bạn.",
+    tl_tab_due: "Đến hạn hôm nay", tl_tab_all: "Tất cả nhiệm vụ", tl_tab_overdue: "Quá hạn", tl_tab_upcoming: "Sắp tới", tl_tab_unassigned: "Chưa được giao",
+    ph_searchcolleague: "Tìm nhiệm vụ của đồng nghiệp (ví dụ để hỗ trợ thay)", btn_search: "Tìm kiếm",
+    btn_editcolumns: "Chỉnh sửa cột", btn_starttasks: "▶ Bắt đầu 11 nhiệm vụ",
+    th_tasktitle: "Tên nhiệm vụ", th_priority: "Mức độ ưu tiên", th_stage: "Giai đoạn nhiệm vụ", th_contacts: "Nhiệm vụ → Liên hệ", th_lastcontacted: "Liên hệ gần nhất",
+    row_task1: "Nhắc đặt lịch Lớp Mạng Xã Hội", row_task2: "Nhắc đặt lịch Lớp Bổ Trợ", row_task3: "Đang hoạt động, chưa đặt lịch", row_task4: "Theo dõi với Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "Chưa bắt đầu", prio_high: "Cao", prio_medium: "Trung bình", prio_low: "Thấp",
+    toast_colleague_t: "Đã thêm nhiệm vụ của đồng nghiệp", toast_colleague_m: "Các nhiệm vụ được giao cho họ giờ cũng xuất hiện trong danh sách của bạn.",
+    modal_editcolumns: "Chỉnh sửa cột", modal_editcolumns_hint: "Thêm Mức độ ưu tiên, sau đó di chuyển lên cạnh Nhiệm vụ → Liên hệ.",
+    btn_cancel: "Hủy", btn_apply: "Áp dụng",
+    toast_colsapplied_t: "Đã cập nhật cột", toast_colsapplied_m: "Đã thêm cột Mức độ ưu tiên. Bây giờ hãy sắp xếp theo mức độ ưu tiên.",
+    toast_sorted_t: "Đã sắp xếp theo mức độ ưu tiên", toast_sorted_m: "Các nhiệm vụ có mức độ ưu tiên cao nhất giờ xuất hiện trước.",
+    task_badge: "Nhiệm vụ 1/10", btn_reschedule: "Đổi lịch", btn_complete: "✓ Hoàn thành",
+    lp_about: "Về liên hệ này", lbl_phone: "Điện thoại", lbl_owner: "Người phụ trách",
+    tab_overview: "Tổng quan", tab_activities: "Hoạt động", tab_intelligence: "Intelligence",
+    ac_tasktitle: "Nhiệm vụ: Nhắc đặt lịch Encounter", ac_overdue: "Quá hạn: Jul 14, 2026",
+    ac_tasknotes: "Ghi chú nhiệm vụ: nhắc học viên đặt lịch <strong>Encounter</strong> của họ. Level/Unit/Lesson hiện tại: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "Lịch sử WhatsApp", msg_sent: "Đã gửi WhatsApp tiếp thị", msg_delivered: "Đã gửi tới", msg_read: "Đã đọc",
+    p2_quickcheck: "Kiểm tra nhanh",
+    p2_question: "Hệ thống đã nhắn tin WhatsApp cho học viên và tin nhắn đã được đọc, nhưng học viên vẫn chưa đặt lịch. Bạn nên làm gì?",
+    topt_a: "Gửi thêm một tin nhắn WhatsApp nữa và chờ đợi.",
+    topt_b: "Gọi trực tiếp cho học viên, vì chỉ nhắn tin thôi chưa hiệu quả.",
+    topt_c: "Để nguyên nhiệm vụ — hệ thống sẽ tự động xử lý.",
+    task_fb_correct: "✓ Chính xác. Gọi trực tiếp là bước đúng khi chỉ nhắn tin thôi chưa hiệu quả.",
+    task_fb_incorrect: "Chưa đúng — hệ thống đã thử nhắn tin rồi. Hãy chọn phương án mà bạn tự mình liên hệ với học viên.",
+    rc_deals: "Giao dịch (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "Số tiền: €1,850<br>Giai đoạn giao dịch: <strong style='color:var(--text-primary)'>Đang hoạt động</strong>",
+    rc_sa: "Hợp đồng Dịch vụ (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Encounter tiếp theo", val_none: "Chưa đặt lịch",
+    toast_taskdone_t: "Đã hoàn thành nhiệm vụ", toast_taskdone_m: "Bây giờ hãy cập nhật hồ sơ với những gì đã xảy ra.",
+    p3_status_open: "Trạng thái: để mở — không thể liên hệ được với học viên",
+    btn_finish: "Kết thúc",
+    sub_all: "Tất cả hoạt động", sub_notes: "Ghi chú", sub_emails: "Email", sub_calls: "Cuộc gọi",
+    btn_createnote: "📝 Tạo ghi chú",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "Tạo ghi chú", ph_notetext: "ví dụ: Học viên đi vắng, không liên hệ được đến ngày 30 tháng 7", lbl_synccourse: "Đồng bộ với Course",
+    btn_savenote: "Lưu ghi chú",
+    note_by: "Ghi chú của bạn", note_justnow: "Vừa xong",
+    note_actions_pin: "📌 Ghim", note_actions_unpin: "Bỏ ghim", note_actions_delete: "Xóa",
+    toast_notesaved_t: "Đã lưu ghi chú", toast_notesaved_m: "Bây giờ hãy ghim lại để cả nhóm có thể xem.",
+    toast_pinned_t: "Đã ghim hoạt động thành công", toast_pinned_m: "Ghi chú hiện đang ở đầu luồng.",
+    p3_unpin_hint: "Khi học viên liên hệ lại được, bạn có thể bỏ ghim hoặc xóa ghi chú này từ cùng một menu.",
+    p4_title: "Làm tốt lắm!",
+    p4_sub: "Bạn đã hoàn thành toàn bộ quy trình Danh sách Hành động, từ đăng nhập đến khép lại chu trình bằng một ghi chú đã ghim.",
+    p4_code_intro: "Sao chép mã này vào Kiểm tra Kiến thức để xác nhận bạn đã hoàn thành bài thực hành:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ Bắt đầu lại",
+  },
+  th: {
+    title: "แซนด์บ็อกซ์ HubSpot — ฝึกฝนรายการสิ่งที่ต้องทำ",
+    nav_contacts: "รายชื่อติดต่อ", nav_deals: "ดีล", nav_companies: "บริษัท", nav_tasks: "งาน",
+    bookmarks_label: "บุ๊กมาร์ก",
+    instr_label_0: "ขั้นตอนที่ 1 — เข้าสู่ระบบ", instr_label_1: "ขั้นตอนที่ 2 — เลือกมุมมอง", instr_label_2: "ขั้นตอนที่ 3 — ทำงานให้เสร็จ", instr_label_3: "ขั้นตอนที่ 4 — สร้างโน้ต", instr_label_4: "เสร็จสมบูรณ์",
+    instr_text_0: "เข้าสู่ระบบ HubSpot แล้วหาส่วน <strong>งาน</strong> จากเมนู CRM จากนั้นบุ๊กมาร์กไว้",
+    instr_text_1: "เลือกมุมมองงาน เพิ่มคอลัมน์ <strong>ความสำคัญ</strong> แล้วจัดเรียงตามความสำคัญ",
+    instr_text_2: "เปิดงานแรก ตรวจสอบโน้ตและสัญญาบริการ แล้วตัดสินใจว่าจะติดต่อนักเรียนอย่างไร",
+    instr_text_3: "อัปเดตงาน เพิ่มโน้ตอธิบายสิ่งที่เกิดขึ้น แล้วปักหมุดไว้เพื่อให้ทีมเห็น",
+    instr_text_4: "คุณทำขั้นตอนรายการสิ่งที่ต้องทำครบทั้งหมดแล้ว",
+    steptab_0: "เข้าสู่ระบบและบุ๊กมาร์ก", steptab_1: "เลือกมุมมอง", steptab_2: "ทำงานให้เสร็จ", steptab_3: "สร้างและปักหมุดโน้ต", steptab_4: "เสร็จสมบูรณ์",
+    task_header: "ขั้นตอนการทำงาน",
+    task_0: "เข้าสู่ระบบและบุ๊กมาร์กงาน", task_1: "เลือกมุมมองและแก้ไขคอลัมน์", task_2: "ดูและทำงานให้เสร็จ", task_3: "สร้างและปักหมุดโน้ต",
+    progress_0: "เสร็จแล้ว 0 จาก 4", progress_suffix: "จาก 4 เสร็จแล้ว",
+    p0_title: "เข้าสู่ระบบ HubSpot", p0_sub: "ที่ปรึกษาทุกคนเริ่มต้นวันเหมือนกัน: เข้าสู่ระบบ จากนั้นหาและบุ๊กมาร์กส่วนงาน",
+    p0_signin_title: "เข้าสู่ระบบ", lbl_email: "อีเมล Wall Street English", lbl_password: "รหัสผ่าน", btn_signin: "เข้าสู่ระบบ",
+    p0_findtasks_title: "หางานในเมนู CRM",
+    p0_findtasks_body: "เปิดเมนู <strong>CRM</strong> ที่แถบด้านซ้ายแล้วคลิก <strong>งาน</strong> — ที่นี่คือที่ที่คุณจะทำงานทุกวัน",
+    crm_contacts: "รายชื่อติดต่อ", crm_companies: "บริษัท", crm_deals: "ดีล", crm_tickets: "ทิกเก็ต", crm_tasks: "งาน",
+    p0_bookmark_title: "บุ๊กมาร์กหน้านี้",
+    p0_bookmark_body: "คุณจะใช้งานส่วนงานทุกวัน ดังนั้นบุ๊กมาร์กไว้ คลิก <strong>ไอคอนบุ๊กมาร์ก ☆</strong> ที่มุมซ้ายบนของแถบด้านข้าง",
+    toast_login_t: "เข้าสู่ระบบแล้ว", toast_login_m: "ยินดีต้อนรับ — ตอนนี้เปิดเมนู CRM",
+    toast_navpicked_t: "พบส่วนงานแล้ว", toast_navpicked_m: "ตอนนี้บุ๊กมาร์กหน้านี้ไว้ใช้งานทุกวัน",
+    toast_bookmarked_t: "บุ๊กมาร์กแล้ว", toast_bookmarked_m: "ตอนนี้ส่วนงานปรากฏในแถบบุ๊กมาร์กของคุณแล้ว",
+    tl_tab_due: "ครบกำหนดวันนี้", tl_tab_all: "งานทั้งหมด", tl_tab_overdue: "เลยกำหนด", tl_tab_upcoming: "ที่จะถึง", tl_tab_unassigned: "ยังไม่มอบหมาย",
+    ph_searchcolleague: "ค้นหางานของเพื่อนร่วมงาน (เช่น เพื่อดูแลแทน)", btn_search: "ค้นหา",
+    btn_editcolumns: "แก้ไขคอลัมน์", btn_starttasks: "▶ เริ่ม 11 งาน",
+    th_tasktitle: "ชื่องาน", th_priority: "ความสำคัญ", th_stage: "สถานะงาน", th_contacts: "งาน → รายชื่อติดต่อ", th_lastcontacted: "ติดต่อล่าสุด",
+    row_task1: "แจ้งเตือนให้จองคลาสโซเชียลมีเดีย", row_task2: "แจ้งเตือนให้จองคลาสเสริม", row_task3: "ยังใช้งานอยู่ ยังไม่จอง", row_task4: "ติดตามผลกับ Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "ยังไม่เริ่ม", prio_high: "สูง", prio_medium: "ปานกลาง", prio_low: "ต่ำ",
+    toast_colleague_t: "เพิ่มงานของเพื่อนร่วมงานแล้ว", toast_colleague_m: "งานที่มอบหมายให้เขาตอนนี้ปรากฏในรายการของคุณด้วย",
+    modal_editcolumns: "แก้ไขคอลัมน์", modal_editcolumns_hint: "เพิ่มความสำคัญ แล้วย้ายมาไว้ข้างงาน → รายชื่อติดต่อ",
+    btn_cancel: "ยกเลิก", btn_apply: "นำไปใช้",
+    toast_colsapplied_t: "อัปเดตคอลัมน์แล้ว", toast_colsapplied_m: "เพิ่มคอลัมน์ความสำคัญแล้ว ตอนนี้จัดเรียงตามความสำคัญ",
+    toast_sorted_t: "จัดเรียงตามความสำคัญแล้ว", toast_sorted_m: "งานที่มีความสำคัญสูงสุดจะปรากฏก่อนแล้วตอนนี้",
+    task_badge: "งาน 1/10", btn_reschedule: "เลื่อนนัด", btn_complete: "✓ เสร็จสิ้น",
+    lp_about: "เกี่ยวกับผู้ติดต่อนี้", lbl_phone: "โทรศัพท์", lbl_owner: "เจ้าของ",
+    tab_overview: "ภาพรวม", tab_activities: "กิจกรรม", tab_intelligence: "Intelligence",
+    ac_tasktitle: "งาน: แจ้งเตือนให้จอง Encounter", ac_overdue: "เลยกำหนด: Jul 14, 2026",
+    ac_tasknotes: "โน้ตของงาน: แจ้งเตือนนักเรียนให้จอง <strong>Encounter</strong> ของตนเอง Level/Unit/Lesson ปัจจุบัน: <strong>13 / 50 / 1</strong>",
+    ac_whatsapp_title: "ประวัติ WhatsApp", msg_sent: "ส่ง WhatsApp การตลาดแล้ว", msg_delivered: "ส่งถึงแล้ว", msg_read: "อ่านแล้ว",
+    p2_quickcheck: "ตรวจสอบอย่างรวดเร็ว",
+    p2_question: "ระบบส่งข้อความ WhatsApp ถึงนักเรียนแล้วและมีการอ่านแล้ว แต่ยังไม่จอง คุณควรทำอย่างไร",
+    topt_a: "ส่งข้อความ WhatsApp อีกครั้งแล้วรอ",
+    topt_b: "โทรหานักเรียนโดยตรง เนื่องจากส่งข้อความอย่างเดียวยังไม่ได้ผล",
+    topt_c: "ปล่อยงานนี้ไว้ — ระบบจะจัดการให้เองโดยอัตโนมัติ",
+    task_fb_correct: "✓ ถูกต้อง การโทรหาโดยตรงคือสิ่งที่ควรทำเมื่อส่งข้อความอย่างเดียวยังไม่ได้ผล",
+    task_fb_incorrect: "ยังไม่ถูกต้อง — ระบบได้ลองส่งข้อความไปแล้ว เลือกตัวเลือกที่คุณติดต่อนักเรียนด้วยตัวเอง",
+    rc_deals: "ดีล (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "จำนวนเงิน: €1,850<br>สถานะดีล: <strong style='color:var(--text-primary)'>กำลังดำเนินการ</strong>",
+    rc_sa: "สัญญาบริการ (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Encounter ครั้งถัดไป", val_none: "ยังไม่ได้จอง",
+    toast_taskdone_t: "งานเสร็จสิ้นแล้ว", toast_taskdone_m: "ตอนนี้อัปเดตข้อมูลด้วยสิ่งที่เกิดขึ้น",
+    p3_status_open: "สถานะ: ปล่อยค้างไว้ — ไม่สามารถติดต่อนักเรียนได้",
+    btn_finish: "เสร็จสิ้น",
+    sub_all: "กิจกรรมทั้งหมด", sub_notes: "โน้ต", sub_emails: "อีเมล", sub_calls: "การโทร",
+    btn_createnote: "📝 สร้างโน้ต",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "สร้างโน้ต", ph_notetext: "เช่น นักเรียนไม่อยู่ ติดต่อไม่ได้จนถึงวันที่ 30 กรกฎาคม", lbl_synccourse: "ซิงค์กับ Course",
+    btn_savenote: "บันทึกโน้ต",
+    note_by: "โน้ตจากคุณ", note_justnow: "เมื่อสักครู่",
+    note_actions_pin: "📌 ปักหมุด", note_actions_unpin: "เลิกปักหมุด", note_actions_delete: "ลบ",
+    toast_notesaved_t: "บันทึกโน้ตแล้ว", toast_notesaved_m: "ตอนนี้ปักหมุดไว้เพื่อให้ทั้งทีมเห็น",
+    toast_pinned_t: "ปักหมุดกิจกรรมสำเร็จแล้ว", toast_pinned_m: "ตอนนี้โน้ตอยู่ด้านบนสุดของกระทู้แล้ว",
+    p3_unpin_hint: "เมื่อนักเรียนกลับมาติดต่อได้อีกครั้ง คุณสามารถเลิกปักหมุดหรือลบโน้ตนี้ได้จากเมนูเดียวกัน",
+    p4_title: "ทำได้ดีมาก!",
+    p4_sub: "คุณทำขั้นตอนรายการสิ่งที่ต้องทำครบทั้งหมดแล้ว ตั้งแต่เข้าสู่ระบบไปจนถึงปิดวงจรด้วยโน้ตที่ปักหมุดไว้",
+    p4_code_intro: "คัดลอกโค้ดนี้ไปยัง Knowledge Check เพื่อยืนยันว่าคุณทำแบบฝึกหัดนี้เสร็จแล้ว:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ เริ่มใหม่",
+  },
+  ko: {
+    title: "HubSpot 샌드박스 — 작업 목록 실습",
+    nav_contacts: "연락처", nav_deals: "거래", nav_companies: "회사", nav_tasks: "작업",
+    bookmarks_label: "북마크",
+    instr_label_0: "1단계 — 로그인", instr_label_1: "2단계 — 보기 선택", instr_label_2: "3단계 — 작업 완료", instr_label_3: "4단계 — 메모 작성", instr_label_4: "완료",
+    instr_text_0: "HubSpot에 로그인하고 CRM 메뉴에서 <strong>작업</strong> 영역을 찾아 북마크에 추가하세요.",
+    instr_text_1: "작업 보기를 선택하고 <strong>우선순위</strong> 열을 추가한 다음 우선순위별로 정렬하세요.",
+    instr_text_2: "첫 번째 작업을 열어 메모와 서비스 계약서를 확인한 후 학생에게 연락할 방법을 결정하세요.",
+    instr_text_3: "작업을 업데이트하고 무슨 일이 있었는지 설명하는 메모를 추가한 다음, 팀이 볼 수 있도록 고정하세요.",
+    instr_text_4: "작업 목록 전체 과정을 완료했습니다.",
+    steptab_0: "로그인 & 북마크", steptab_1: "보기 선택", steptab_2: "작업 완료", steptab_3: "메모 작성 & 고정", steptab_4: "완료",
+    task_header: "워크플로 단계",
+    task_0: "로그인 & 작업 북마크", task_1: "보기 선택 & 열 편집", task_2: "작업 보기 & 완료", task_3: "메모 작성 & 고정",
+    progress_0: "4개 중 0개 완료", progress_suffix: "4개 중 완료",
+    p0_title: "HubSpot에 로그인하세요", p0_sub: "모든 컨설턴트는 하루를 똑같이 시작합니다: 로그인한 다음 작업 영역을 찾아 북마크에 추가하세요.",
+    p0_signin_title: "로그인", lbl_email: "Wall Street English 이메일", lbl_password: "비밀번호", btn_signin: "로그인",
+    p0_findtasks_title: "CRM 메뉴에서 작업 찾기",
+    p0_findtasks_body: "왼쪽 사이드바에서 <strong>CRM</strong> 메뉴를 열고 <strong>작업</strong>을 클릭하세요 — 여기서 매일 작업하게 됩니다.",
+    crm_contacts: "연락처", crm_companies: "회사", crm_deals: "거래", crm_tickets: "티켓", crm_tasks: "작업",
+    p0_bookmark_title: "페이지 북마크하기",
+    p0_bookmark_body: "작업을 매일 사용하게 되니 북마크하세요. 사이드바 왼쪽 상단의 <strong>☆ 북마크 아이콘</strong>을 클릭하세요.",
+    toast_login_t: "로그인됨", toast_login_m: "환영합니다 — 이제 CRM 메뉴를 열어 보세요.",
+    toast_navpicked_t: "작업을 찾았습니다", toast_navpicked_m: "이제 매일 사용할 수 있도록 이 페이지를 북마크하세요.",
+    toast_bookmarked_t: "북마크됨", toast_bookmarked_m: "이제 작업이 북마크 바에 표시됩니다.",
+    tl_tab_due: "오늘 마감", tl_tab_all: "모든 작업", tl_tab_overdue: "기한 초과", tl_tab_upcoming: "예정됨", tl_tab_unassigned: "미배정",
+    ph_searchcolleague: "동료의 작업 검색 (예: 대신 처리하기 위해)", btn_search: "검색",
+    btn_editcolumns: "열 편집", btn_starttasks: "▶ 11개 작업 시작",
+    th_tasktitle: "작업 제목", th_priority: "우선순위", th_stage: "작업 단계", th_contacts: "작업 → 연락처", th_lastcontacted: "마지막 연락",
+    row_task1: "소셜 미디어 클래스 예약 알림", row_task2: "보충 클래스 예약 알림", row_task3: "활성 상태, 예약 안 됨", row_task4: "Max Lange 후속 조치",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "시작 전", prio_high: "높음", prio_medium: "보통", prio_low: "낮음",
+    toast_colleague_t: "동료의 작업이 추가되었습니다", toast_colleague_m: "동료에게 배정된 작업이 이제 회원님의 목록에도 표시됩니다.",
+    modal_editcolumns: "열 편집", modal_editcolumns_hint: "우선순위를 추가한 다음 작업 → 연락처 옆으로 이동하세요.",
+    btn_cancel: "취소", btn_apply: "적용",
+    toast_colsapplied_t: "열이 업데이트되었습니다", toast_colsapplied_m: "우선순위 열이 추가되었습니다. 이제 우선순위별로 정렬하세요.",
+    toast_sorted_t: "우선순위별로 정렬됨", toast_sorted_m: "이제 우선순위가 가장 높은 작업이 먼저 표시됩니다.",
+    task_badge: "작업 1/10", btn_reschedule: "일정 변경", btn_complete: "✓ 완료",
+    lp_about: "이 연락처 정보", lbl_phone: "전화번호", lbl_owner: "담당자",
+    tab_overview: "개요", tab_activities: "활동", tab_intelligence: "Intelligence",
+    ac_tasktitle: "작업: Encounter 예약 알림", ac_overdue: "기한 초과: Jul 14, 2026",
+    ac_tasknotes: "작업 메모: 학생에게 <strong>Encounter</strong>를 예약하라고 알려 주세요. 현재 Level/Unit/Lesson: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "WhatsApp 기록", msg_sent: "마케팅 WhatsApp 전송됨", msg_delivered: "전달됨", msg_read: "읽음",
+    p2_quickcheck: "간단 확인",
+    p2_question: "시스템이 이미 학생에게 WhatsApp 메시지를 보냈고 읽음 확인도 되었지만, 아직 예약하지 않았습니다. 어떻게 해야 할까요?",
+    topt_a: "WhatsApp 메시지를 한 번 더 보내고 기다린다.",
+    topt_b: "메시지만으로는 효과가 없었으니 학생에게 직접 전화한다.",
+    topt_c: "작업을 그대로 둔다 — 시스템이 자동으로 처리해 줄 것이다.",
+    task_fb_correct: "✓ 정답입니다. 메시지만으로 효과가 없었다면 직접 전화하는 것이 올바른 행동입니다.",
+    task_fb_incorrect: "정답이 아닙니다 — 시스템은 이미 메시지를 시도했습니다. 회원님이 직접 학생에게 연락하는 옵션을 선택하세요.",
+    rc_deals: "거래 (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "금액: €1,850<br>거래 단계: <strong style='color:var(--text-primary)'>진행 중</strong>",
+    rc_sa: "서비스 계약서 (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "다음 Encounter", val_none: "예약 없음",
+    toast_taskdone_t: "작업 완료됨", toast_taskdone_m: "이제 무슨 일이 있었는지 레코드를 업데이트하세요.",
+    p3_status_open: "상태: 미해결로 남김 — 학생과 연락이 닿지 않음",
+    btn_finish: "완료",
+    sub_all: "모든 활동", sub_notes: "메모", sub_emails: "이메일", sub_calls: "통화",
+    btn_createnote: "📝 메모 작성",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "메모 작성", ph_notetext: "예: 학생이 자리를 비웠으며 7월 30일까지 연락 불가", lbl_synccourse: "Course에 동기화",
+    btn_savenote: "메모 저장",
+    note_by: "회원님의 메모", note_justnow: "방금 전",
+    note_actions_pin: "📌 고정", note_actions_unpin: "고정 해제", note_actions_delete: "삭제",
+    toast_notesaved_t: "메모가 저장되었습니다", toast_notesaved_m: "이제 팀 전체가 볼 수 있도록 고정하세요.",
+    toast_pinned_t: "활동이 성공적으로 고정되었습니다", toast_pinned_m: "이제 메모가 스레드 맨 위에 표시됩니다.",
+    p3_unpin_hint: "학생과 다시 연락이 닿으면 같은 메뉴에서 이 메모의 고정을 해제하거나 삭제할 수 있습니다.",
+    p4_title: "수고하셨습니다!",
+    p4_sub: "로그인부터 고정된 메모로 마무리하기까지 작업 목록 전체 과정을 완료했습니다.",
+    p4_code_intro: "실습을 완료했음을 확인하려면 이 코드를 지식 확인 항목에 복사하세요:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ 다시 시작",
+  },
+  zh: {
+    title: "HubSpot 沙盒 — 行动清单练习",
+    nav_contacts: "联系人", nav_deals: "交易", nav_companies: "公司", nav_tasks: "任务",
+    bookmarks_label: "书签",
+    instr_label_0: "第 1 步 — 登录", instr_label_1: "第 2 步 — 选择视图", instr_label_2: "第 3 步 — 完成任务", instr_label_3: "第 4 步 — 创建备注", instr_label_4: "完成",
+    instr_text_0: "登录 HubSpot，在 CRM 菜单中找到<strong>任务</strong>区域，然后将其加入书签。",
+    instr_text_1: "选择一个任务视图，添加<strong>优先级</strong>列，并按优先级排序。",
+    instr_text_2: "打开第一个任务，查看备注和服务协议，然后决定如何联系学员。",
+    instr_text_3: "更新任务，添加一条说明情况的备注，并将其置顶，以便团队可以看到。",
+    instr_text_4: "你已完成整个行动清单流程。",
+    steptab_0: "登录并加书签", steptab_1: "选择视图", steptab_2: "完成任务", steptab_3: "创建并置顶备注", steptab_4: "完成",
+    task_header: "工作流步骤",
+    task_0: "登录并将任务加入书签", task_1: "选择视图并编辑列", task_2: "查看并完成任务", task_3: "创建并置顶备注",
+    progress_0: "已完成 0/4", progress_suffix: "已完成，共 4 项",
+    p0_title: "登录 HubSpot", p0_sub: "每位顾问每天都以同样的方式开始：先登录，然后找到并收藏任务区域。",
+    p0_signin_title: "登录", lbl_email: "Wall Street English 邮箱", lbl_password: "密码", btn_signin: "登录",
+    p0_findtasks_title: "在 CRM 菜单中找到任务",
+    p0_findtasks_body: "打开左侧边栏中的<strong>CRM</strong>菜单，点击<strong>任务</strong> —— 这里是你每天工作的地方。",
+    crm_contacts: "联系人", crm_companies: "公司", crm_deals: "交易", crm_tickets: "工单", crm_tasks: "任务",
+    p0_bookmark_title: "将此页面加入书签",
+    p0_bookmark_body: "你每天都会用到任务，所以把它加入书签。点击侧边栏左上角的<strong>☆ 书签图标</strong>。",
+    toast_login_t: "已登录", toast_login_m: "欢迎 —— 现在打开 CRM 菜单。",
+    toast_navpicked_t: "已找到任务", toast_navpicked_m: "现在将此页面加入书签，方便每天使用。",
+    toast_bookmarked_t: "已加入书签", toast_bookmarked_m: "任务现已出现在你的书签栏中。",
+    tl_tab_due: "今日到期", tl_tab_all: "所有任务", tl_tab_overdue: "已逾期", tl_tab_upcoming: "即将到来", tl_tab_unassigned: "未分配",
+    ph_searchcolleague: "搜索同事的任务（例如替他们代管）", btn_search: "搜索",
+    btn_editcolumns: "编辑列", btn_starttasks: "▶ 开始 11 项任务",
+    th_tasktitle: "任务标题", th_priority: "优先级", th_stage: "任务阶段", th_contacts: "任务 → 联系人", th_lastcontacted: "最近联系时间",
+    row_task1: "提醒预约社交媒体课程", row_task2: "提醒预约补充课程", row_task3: "活跃中，尚未预约", row_task4: "跟进 Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "未开始", prio_high: "高", prio_medium: "中", prio_low: "低",
+    toast_colleague_t: "已添加同事的任务", toast_colleague_m: "分配给他们的任务现在也会显示在你的列表中。",
+    modal_editcolumns: "编辑列", modal_editcolumns_hint: "添加优先级，然后将其移到任务 → 联系人旁边。",
+    btn_cancel: "取消", btn_apply: "应用",
+    toast_colsapplied_t: "列已更新", toast_colsapplied_m: "已添加优先级列。现在按优先级排序。",
+    toast_sorted_t: "已按优先级排序", toast_sorted_m: "优先级最高的任务现在会排在最前面。",
+    task_badge: "任务 1/10", btn_reschedule: "重新安排", btn_complete: "✓ 完成",
+    lp_about: "关于此联系人", lbl_phone: "电话", lbl_owner: "负责人",
+    tab_overview: "概览", tab_activities: "活动", tab_intelligence: "Intelligence",
+    ac_tasktitle: "任务：提醒预约 Encounter", ac_overdue: "已逾期：Jul 14, 2026",
+    ac_tasknotes: "任务备注：提醒学员预约他们的 <strong>Encounter</strong>。当前 Level/Unit/Lesson：<strong>13 / 50 / 1</strong>。",
+    ac_whatsapp_title: "WhatsApp 记录", msg_sent: "营销 WhatsApp 已发送", msg_delivered: "已送达", msg_read: "已读",
+    p2_quickcheck: "快速检查",
+    p2_question: "系统已通过 WhatsApp 给学员发送消息，对方也已读，但仍未预约。你应该怎么做？",
+    topt_a: "再发一条 WhatsApp 消息并等待。",
+    topt_b: "直接给学员打电话，因为仅靠发消息还不够。",
+    topt_c: "放着这个任务不管——系统会自动处理。",
+    task_fb_correct: "✓ 正确。当仅靠发消息无效时，直接打电话是正确的做法。",
+    task_fb_incorrect: "不太对——系统已经尝试过发消息了。请选择由你亲自联系学员的选项。",
+    rc_deals: "交易 (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "金额：€1,850<br>交易阶段：<strong style='color:var(--text-primary)'>进行中</strong>",
+    rc_sa: "服务协议 (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "下一次 Encounter", val_none: "尚未预约",
+    toast_taskdone_t: "任务已完成", toast_taskdone_m: "现在请更新记录，说明发生了什么。",
+    p3_status_open: "状态：保持开放——未能联系到学员",
+    btn_finish: "完成",
+    sub_all: "所有活动", sub_notes: "备注", sub_emails: "邮件", sub_calls: "通话",
+    btn_createnote: "📝 创建备注",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "创建备注", ph_notetext: "例如：学员不在，7 月 30 日前无法联系", lbl_synccourse: "同步到 Course",
+    btn_savenote: "保存备注",
+    note_by: "你的备注", note_justnow: "刚刚",
+    note_actions_pin: "📌 置顶", note_actions_unpin: "取消置顶", note_actions_delete: "删除",
+    toast_notesaved_t: "备注已保存", toast_notesaved_m: "现在将其置顶，方便整个团队查看。",
+    toast_pinned_t: "活动已成功置顶", toast_pinned_m: "备注现已置于对话串顶部。",
+    p3_unpin_hint: "当学员重新取得联系后，你可以在同一菜单中取消置顶或删除此备注。",
+    p4_title: "干得漂亮！",
+    p4_sub: "你已完成整个行动清单流程，从登录到用一条置顶备注完成闭环。",
+    p4_code_intro: "将此代码复制到知识检查中，以确认你已完成本次演练：<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ 重新开始",
+  },
+  ar: {
+    title: "بيئة HubSpot التجريبية — تدريب على قائمة الإجراءات",
+    nav_contacts: "جهات الاتصال", nav_deals: "الصفقات", nav_companies: "الشركات", nav_tasks: "المهام",
+    bookmarks_label: "الإشارات المرجعية",
+    instr_label_0: "الخطوة 1 — تسجيل الدخول", instr_label_1: "الخطوة 2 — اختيار طريقة عرض", instr_label_2: "الخطوة 3 — إتمام مهمة", instr_label_3: "الخطوة 4 — إنشاء ملاحظة", instr_label_4: "اكتمل",
+    instr_text_0: "سجّل الدخول إلى HubSpot، وابحث عن قسم <strong>المهام</strong> في قائمة CRM، ثم أضفه إلى الإشارات المرجعية.",
+    instr_text_1: "اختر طريقة عرض للمهام، وأضف عمود <strong>الأولوية</strong>، ثم رتّب حسب الأولوية.",
+    instr_text_2: "افتح المهمة الأولى، وراجع الملاحظات واتفاقية الخدمات، ثم قرّر كيفية التواصل مع الطالب.",
+    instr_text_3: "حدّث المهمة، وأضف ملاحظة توضح ما حدث، ثم ثبّتها ليتمكن الفريق من رؤيتها.",
+    instr_text_4: "لقد أكملت سير عمل قائمة الإجراءات بالكامل.",
+    steptab_0: "تسجيل الدخول وإضافة إشارة مرجعية", steptab_1: "اختيار طريقة عرض", steptab_2: "إتمام مهمة", steptab_3: "إنشاء وتثبيت ملاحظة", steptab_4: "اكتمل",
+    task_header: "خطوات سير العمل",
+    task_0: "تسجيل الدخول وإضافة المهام إلى الإشارات المرجعية", task_1: "اختيار طريقة عرض وتعديل الأعمدة", task_2: "عرض المهمة وإتمامها", task_3: "إنشاء وتثبيت ملاحظة",
+    progress_0: "اكتمل 0 من 4", progress_suffix: "مكتمل من 4",
+    p0_title: "سجّل الدخول إلى HubSpot", p0_sub: "يبدأ كل مستشار يومه بالطريقة نفسها: تسجيل الدخول، ثم إيجاد قسم المهام وإضافته إلى الإشارات المرجعية.",
+    p0_signin_title: "تسجيل الدخول", lbl_email: "البريد الإلكتروني لدى Wall Street English", lbl_password: "كلمة المرور", btn_signin: "تسجيل الدخول",
+    p0_findtasks_title: "إيجاد المهام في قائمة CRM",
+    p0_findtasks_body: "افتح قائمة <strong>CRM</strong> في الشريط الجانبي الأيسر، وانقر على <strong>المهام</strong> — هنا ستعمل كل يوم.",
+    crm_contacts: "جهات الاتصال", crm_companies: "الشركات", crm_deals: "الصفقات", crm_tickets: "التذاكر", crm_tasks: "المهام",
+    p0_bookmark_title: "أضف الصفحة إلى الإشارات المرجعية",
+    p0_bookmark_body: "ستستخدم المهام كل يوم، لذا أضفها إلى الإشارات المرجعية. انقر على <strong>أيقونة ☆</strong> أعلى يسار الشريط الجانبي.",
+    toast_login_t: "تم تسجيل الدخول", toast_login_m: "مرحبًا بك — الآن افتح قائمة CRM.",
+    toast_navpicked_t: "تم العثور على المهام", toast_navpicked_m: "الآن أضف هذه الصفحة إلى الإشارات المرجعية للاستخدام اليومي.",
+    toast_bookmarked_t: "تمت الإضافة إلى الإشارات المرجعية", toast_bookmarked_m: "تظهر المهام الآن في شريط الإشارات المرجعية لديك.",
+    tl_tab_due: "مستحقة اليوم", tl_tab_all: "جميع المهام", tl_tab_overdue: "متأخرة", tl_tab_upcoming: "قادمة", tl_tab_unassigned: "غير مسندة",
+    ph_searchcolleague: "ابحث عن مهام زميل (مثلاً لتغطيته)", btn_search: "بحث",
+    btn_editcolumns: "تعديل الأعمدة", btn_starttasks: "▶ بدء 11 مهمة",
+    th_tasktitle: "عنوان المهمة", th_priority: "الأولوية", th_stage: "مرحلة المهمة", th_contacts: "المهمة → جهات الاتصال", th_lastcontacted: "آخر تواصل",
+    row_task1: "تذكير بحجز حصة وسائل التواصل الاجتماعي", row_task2: "تذكير بحجز الحصة التكميلية", row_task3: "نشطة، لم يتم الحجز", row_task4: "متابعة مع Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "لم تبدأ", prio_high: "مرتفعة", prio_medium: "متوسطة", prio_low: "منخفضة",
+    toast_colleague_t: "تمت إضافة مهام الزميل", toast_colleague_m: "تظهر الآن المهام المسندة إليه في قائمتك أيضًا.",
+    modal_editcolumns: "تعديل الأعمدة", modal_editcolumns_hint: "أضف الأولوية، ثم انقلها بجانب المهمة → جهات الاتصال.",
+    btn_cancel: "إلغاء", btn_apply: "تطبيق",
+    toast_colsapplied_t: "تم تحديث الأعمدة", toast_colsapplied_m: "تمت إضافة عمود الأولوية. الآن رتّب حسب الأولوية.",
+    toast_sorted_t: "تم الترتيب حسب الأولوية", toast_sorted_m: "تظهر الآن المهام الأعلى أولوية أولًا.",
+    task_badge: "المهمة 1/10", btn_reschedule: "إعادة الجدولة", btn_complete: "✓ إتمام",
+    lp_about: "عن جهة الاتصال هذه", lbl_phone: "الهاتف", lbl_owner: "المالك",
+    tab_overview: "نظرة عامة", tab_activities: "الأنشطة", tab_intelligence: "Intelligence",
+    ac_tasktitle: "المهمة: تذكير بحجز Encounter", ac_overdue: "متأخرة: Jul 14, 2026",
+    ac_tasknotes: "ملاحظات المهمة: ذكّر الطالب بحجز <strong>Encounter</strong> الخاص به. Level/Unit/Lesson الحالي: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "سجل WhatsApp", msg_sent: "تم إرسال رسالة WhatsApp تسويقية", msg_delivered: "تم التسليم", msg_read: "تمت القراءة",
+    p2_quickcheck: "فحص سريع",
+    p2_question: "أرسل النظام بالفعل رسالة WhatsApp إلى الطالب وتمت قراءتها، لكنه لم يحجز بعد. ماذا يجب أن تفعل؟",
+    topt_a: "إرسال رسالة WhatsApp أخرى والانتظار.",
+    topt_b: "الاتصال بالطالب مباشرة، لأن الرسالة وحدها لم تنجح.",
+    topt_c: "ترك المهمة — سيحلّها النظام تلقائيًا.",
+    task_fb_correct: "✓ صحيح. الاتصال المباشر هو الخطوة الصحيحة عندما لا تنجح الرسالة وحدها.",
+    task_fb_incorrect: "ليس تمامًا — لقد حاول النظام بالفعل إرسال رسالة. اختر الخيار الذي تتواصل فيه شخصيًا مع الطالب.",
+    rc_deals: "الصفقات (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "المبلغ: €1,850<br>مرحلة الصفقة: <strong style='color:var(--text-primary)'>نشطة</strong>",
+    rc_sa: "اتفاقية الخدمات (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "Encounter القادم", val_none: "لا يوجد حجز",
+    toast_taskdone_t: "اكتملت المهمة", toast_taskdone_m: "الآن حدّث السجل بما حدث.",
+    p3_status_open: "الحالة: تُركت مفتوحة — تعذّر الوصول إلى الطالب",
+    btn_finish: "إنهاء",
+    sub_all: "جميع الأنشطة", sub_notes: "الملاحظات", sub_emails: "الرسائل الإلكترونية", sub_calls: "المكالمات",
+    btn_createnote: "📝 إنشاء ملاحظة",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "إنشاء ملاحظة", ph_notetext: "مثال: الطالب غائب، لا تواصل حتى 30 يوليو", lbl_synccourse: "مزامنة مع Course",
+    btn_savenote: "حفظ الملاحظة",
+    note_by: "ملاحظة منك", note_justnow: "الآن",
+    note_actions_pin: "📌 تثبيت", note_actions_unpin: "إلغاء التثبيت", note_actions_delete: "حذف",
+    toast_notesaved_t: "تم حفظ الملاحظة", toast_notesaved_m: "الآن ثبّتها ليتمكن الفريق بأكمله من رؤيتها.",
+    toast_pinned_t: "تم تثبيت النشاط بنجاح", toast_pinned_m: "الملاحظة الآن في أعلى سلسلة المحادثة.",
+    p3_unpin_hint: "بمجرد أن يعاود الطالب التواصل، يمكنك إلغاء تثبيت هذه الملاحظة أو حذفها من القائمة نفسها.",
+    p4_title: "عمل رائع!",
+    p4_sub: "لقد أكملت سير عمل قائمة الإجراءات بالكامل، من تسجيل الدخول إلى إغلاق الحلقة بملاحظة مثبّتة.",
+    p4_code_intro: "انسخ هذا الرمز إلى اختبار المعرفة لتأكيد إتمامك للتدريب:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ إعادة التشغيل",
+  },
+  he: {
+    title: "ארגז חול של HubSpot — תרגול רשימת פעולות",
+    nav_contacts: "אנשי קשר", nav_deals: "עסקאות", nav_companies: "חברות", nav_tasks: "משימות",
+    bookmarks_label: "סימניות",
+    instr_label_0: "שלב 1 — התחברות", instr_label_1: "שלב 2 — בחירת תצוגה", instr_label_2: "שלב 3 — השלמת משימה", instr_label_3: "שלב 4 — יצירת הערה", instr_label_4: "הושלם",
+    instr_text_0: "התחבר/י ל-HubSpot ואתר/י את אזור <strong>המשימות</strong> בתפריט ה-CRM, ולאחר מכן סמן/י אותו כסימנייה.",
+    instr_text_1: "בחר/י תצוגת משימות, הוסף/הוסיפי את העמודה <strong>עדיפות</strong>, ומיין/י לפי עדיפות.",
+    instr_text_2: "פתח/י את המשימה הראשונה, בדוק/בדקי את ההערות ואת הסכם השירות, והחלט/י כיצד ליצור קשר עם התלמיד/ה.",
+    instr_text_3: "עדכן/י את המשימה, הוסף/הוסיפי הערה שמסבירה מה קרה, והצמד/י אותה כדי שהצוות יוכל לראות אותה.",
+    instr_text_4: "השלמת את כל תהליך רשימת הפעולות.",
+    steptab_0: "התחברות וסימון", steptab_1: "בחירת תצוגה", steptab_2: "השלמת משימה", steptab_3: "יצירה והצמדה של הערה", steptab_4: "הושלם",
+    task_header: "שלבי התהליך",
+    task_0: "התחברות וסימון המשימות כסימנייה", task_1: "בחירת תצוגה ועריכת עמודות", task_2: "צפייה והשלמת משימה", task_3: "יצירה והצמדה של הערה",
+    progress_0: "0 מתוך 4 הושלמו", progress_suffix: "מתוך 4 הושלמו",
+    p0_title: "התחבר/י ל-HubSpot", p0_sub: "כל יועץ/ת מתחיל/ה את היום באותו אופן: להתחבר, ואז לאתר ולסמן כסימנייה את אזור המשימות.",
+    p0_signin_title: "התחברות", lbl_email: "אימייל של Wall Street English", lbl_password: "סיסמה", btn_signin: "התחברות",
+    p0_findtasks_title: "אתר/י את המשימות בתפריט ה-CRM",
+    p0_findtasks_body: "פתח/י את תפריט <strong>CRM</strong> בסרגל הצד השמאלי ולחץ/י על <strong>משימות</strong> — כאן תעבוד/י בכל יום.",
+    crm_contacts: "אנשי קשר", crm_companies: "חברות", crm_deals: "עסקאות", crm_tickets: "כרטיסים", crm_tasks: "משימות",
+    p0_bookmark_title: "סמן/י את העמוד כסימנייה",
+    p0_bookmark_body: "תשתמש/י במשימות מדי יום, לכן סמן/י אותן כסימנייה. לחץ/י על <strong>סמל הסימנייה ☆</strong> בפינה השמאלית העליונה של סרגל הצד.",
+    toast_login_t: "ההתחברות בוצעה", toast_login_m: "ברוך/ה הבא/ה — כעת פתח/י את תפריט ה-CRM.",
+    toast_navpicked_t: "המשימות נמצאו", toast_navpicked_m: "כעת סמן/י עמוד זה כסימנייה לשימוש יומיומי.",
+    toast_bookmarked_t: "סומן כסימנייה", toast_bookmarked_m: "המשימות מופיעות כעת בשורת הסימניות שלך.",
+    tl_tab_due: "מועד היום", tl_tab_all: "כל המשימות", tl_tab_overdue: "באיחור", tl_tab_upcoming: "קרובות", tl_tab_unassigned: "לא משויכות",
+    ph_searchcolleague: "חיפוש משימות של עמית/ה (למשל כדי לכסות עבורו/ה)", btn_search: "חיפוש",
+    btn_editcolumns: "עריכת עמודות", btn_starttasks: "▶ התחלת 11 משימות",
+    th_tasktitle: "כותרת המשימה", th_priority: "עדיפות", th_stage: "שלב המשימה", th_contacts: "משימה ← אנשי קשר", th_lastcontacted: "יצירת קשר אחרונה",
+    row_task1: "תזכורת להזמנת שיעור רשתות חברתיות", row_task2: "תזכורת להזמנת שיעור משלים", row_task3: "פעיל, טרם הוזמן", row_task4: "מעקב עם Max Lange",
+    row_contact1: "Manuela J.", row_contact2: "Abdelilah R.", row_contact3: "Saskia W.", row_contact4: "Max L.",
+    stage_notstarted: "טרם החל", prio_high: "גבוהה", prio_medium: "בינונית", prio_low: "נמוכה",
+    toast_colleague_t: "משימות העמית/ה נוספו", toast_colleague_m: "המשימות שהוקצו לו/ה מופיעות כעת גם ברשימה שלך.",
+    modal_editcolumns: "עריכת עמודות", modal_editcolumns_hint: "הוסף/הוסיפי עדיפות, ולאחר מכן הזז/הזיזי אותה ליד משימה ← אנשי קשר.",
+    btn_cancel: "ביטול", btn_apply: "החל",
+    toast_colsapplied_t: "העמודות עודכנו", toast_colsapplied_m: "עמודת העדיפות נוספה. כעת מיין/י לפי עדיפות.",
+    toast_sorted_t: "מוין לפי עדיפות", toast_sorted_m: "המשימות בעדיפות הגבוהה ביותר מופיעות כעת ראשונות.",
+    task_badge: "משימה 1/10", btn_reschedule: "תזמון מחדש", btn_complete: "✓ השלמה",
+    lp_about: "על איש/אשת הקשר הזה/ו", lbl_phone: "טלפון", lbl_owner: "בעלים",
+    tab_overview: "סקירה כללית", tab_activities: "פעילויות", tab_intelligence: "Intelligence",
+    ac_tasktitle: "משימה: תזכורת להזמנת Encounter", ac_overdue: "באיחור: Jul 14, 2026",
+    ac_tasknotes: "הערות המשימה: הזכר/י לתלמיד/ה להזמין את ה-<strong>Encounter</strong> שלו/ה. Level/Unit/Lesson נוכחיים: <strong>13 / 50 / 1</strong>.",
+    ac_whatsapp_title: "היסטוריית WhatsApp", msg_sent: "הודעת WhatsApp שיווקית נשלחה", msg_delivered: "נמסרה", msg_read: "נקראה",
+    p2_quickcheck: "בדיקה מהירה",
+    p2_question: "המערכת כבר שלחה לתלמיד/ה הודעת WhatsApp וההודעה נקראה, אך עדיין לא בוצעה הזמנה. מה עליך לעשות?",
+    topt_a: "לשלוח עוד הודעת WhatsApp ולחכות.",
+    topt_b: "להתקשר ישירות לתלמיד/ה, מכיוון שהודעה בלבד לא הספיקה.",
+    topt_c: "להשאיר את המשימה — המערכת תפתור אותה אוטומטית.",
+    task_fb_correct: "✓ נכון. שיחת טלפון ישירה היא הצעד הנכון כאשר הודעה בלבד לא עבדה.",
+    task_fb_incorrect: "לא בדיוק — המערכת כבר ניסתה לשלוח הודעה. בחר/י באפשרות שבה את/ה יוצר/ת קשר אישי עם התלמיד/ה.",
+    rc_deals: "עסקאות (1)", deal_name: "Maria Novak — Core Course",
+    deal_meta: "סכום: €1,850<br>שלב העסקה: <strong style='color:var(--text-primary)'>פעילה</strong>",
+    rc_sa: "הסכם שירות (1)", lbl_level: "Level", lbl_unit: "Unit", lbl_lesson: "Lesson", lbl_nextencounter: "ה-Encounter הבא", val_none: "לא בוצעה הזמנה",
+    toast_taskdone_t: "המשימה הושלמה", toast_taskdone_m: "כעת עדכן/י את הרשומה במה שקרה.",
+    p3_status_open: "סטטוס: הושאר פתוח — לא ניתן היה ליצור קשר עם התלמיד/ה",
+    btn_finish: "סיום",
+    sub_all: "כל הפעילויות", sub_notes: "הערות", sub_emails: "אימיילים", sub_calls: "שיחות",
+    btn_createnote: "📝 יצירת הערה",
+    p3_sa_hint: "Level 13 / Unit 50 / Lesson 1",
+    modal_createnote: "יצירת הערה", ph_notetext: "לדוגמה: התלמיד/ה נעדר/ת, אין קשר עד ה-30 ביולי", lbl_synccourse: "סנכרון עם Course",
+    btn_savenote: "שמירת ההערה",
+    note_by: "הערה ממך", note_justnow: "הרגע",
+    note_actions_pin: "📌 הצמדה", note_actions_unpin: "ביטול הצמדה", note_actions_delete: "מחיקה",
+    toast_notesaved_t: "ההערה נשמרה", toast_notesaved_m: "כעת הצמד/י אותה כדי שכל הצוות יוכל לראות אותה.",
+    toast_pinned_t: "הפעילות הוצמדה בהצלחה", toast_pinned_m: "ההערה נמצאת כעת בראש רצף הפעילות.",
+    p3_unpin_hint: "לאחר שהתלמיד/ה יחזור/תחזור ליצור קשר, תוכל/י לבטל את ההצמדה או למחוק הערה זו מאותו תפריט.",
+    p4_title: "עבודה מצוינת!",
+    p4_sub: "השלמת את כל תהליך רשימת הפעולות, מההתחברות ועד לסגירת המעגל עם הערה מוצמדת.",
+    p4_code_intro: "העתק/י את הקוד הזה אל בדיקת הידע כדי לאשר שסיימת את התרגול:<br><br><span class=\"code-word\">WSE-AL-TASK-COMPLETE-2026</span>",
+    btn_restart: "↺ התחלה מחדש",
+  },
+};
+const LANG_NAMES = {
+  en:"English", es:"Español", fr:"Français", de:"Deutsch", it:"Italiano", pt:"Português",
+  ru:"Русский", tr:"Türkçe", cs:"Čeština", id:"Bahasa Indonesia", vi:"Tiếng Việt", th:"ไทย",
+  ko:"한국어", zh:"中文", ar:"العربية", he:"עברית", my:"မြန်မာ", kk:"Қазақша", mn:"Монгол", lo:"ລາວ"
+};
+const RTL_LANGS = new Set(["ar","he"]);
+
+function normalizeLang(l) {
+  if (!l) return 'en';
+  l = l.toLowerCase().split('-')[0];
+  return I18N[l] ? l : 'en';
+}
+function t(k) {
+  const lang = document.documentElement.getAttribute('data-lang') || 'en';
+  return (I18N[lang] && I18N[lang][k]) || (I18N.en && I18N.en[k]) || k;
+}
+function applyLang(l) {
+  l = normalizeLang(l);
+  document.documentElement.setAttribute('data-lang', l);
+  document.documentElement.setAttribute('dir', RTL_LANGS.has(l) ? 'rtl' : 'ltr');
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.setAttribute('placeholder', t(el.getAttribute('data-i18n-ph'))); });
+  const sel = document.getElementById('langsel');
+  if (sel) sel.value = l;
+}
+</script>
+
+<script>
+// ── State ─────────────────────────────
+let step = 0;
+let tasksDone = [false,false,false,false];
+let priorityChecked = false;
+let priorityMoved = false;
+let columnsApplied = false;
+let taskCardOpened = false;
+let saOpened = false;
+let noteSaved = false;
+let notePinned = false;
+
+// ── Toast ─────────────────────────────
+function toast(title, msg) {
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ── Reveal ────────────────────────────
+function reveal(id) {
+  const el = document.getElementById(id);
+  if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' }), 80);
+}
+
+// ── Instruction map ─────────────────────
+const instrs = [
+  { icon:'①', labelKey:'instr_label_0', textKey:'instr_text_0' },
+  { icon:'②', labelKey:'instr_label_1', textKey:'instr_text_1' },
+  { icon:'③', labelKey:'instr_label_2', textKey:'instr_text_2' },
+  { icon:'④', labelKey:'instr_label_3', textKey:'instr_text_3' },
+  { icon:'✓', labelKey:'instr_label_4', textKey:'instr_text_4' },
+];
+
+// ── Navigation ──────────────────────────
+function goTo(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${n}`).classList.add('active');
+  document.querySelectorAll('.step-tab').forEach((tab,i) => {
+    tab.classList.remove('active','done');
+    const num = document.getElementById(`snum-${i}`);
+    if (i<n) { tab.classList.add('done'); num.textContent='✓'; }
+    else if (i===n) { tab.classList.add('active'); num.textContent=i+1; }
+    else { num.textContent=i+1; }
+  });
+  document.querySelectorAll('.task-item-row').forEach((r,i) => {
+    r.classList.remove('active-task');
+    if (i===n && n<4) r.classList.add('active-task');
+  });
+  const instr = instrs[n];
+  document.getElementById('instrIcon').textContent = instr.icon;
+  document.getElementById('instrLabel').textContent = t(instr.labelKey);
+  document.getElementById('instrText').innerHTML = t(instr.textKey);
+  document.querySelectorAll(`#panel-${n} .pane-content`).forEach(p => p.scrollTop = 0);
+  step = n;
+}
+
+function doneTask(i) {
+  tasksDone[i] = true;
+  const tc = document.getElementById(`tc-${i}`);
+  if (tc) { tc.classList.add('done'); tc.textContent = '✓'; }
+  const row = document.getElementById(`trow-${i}`);
+  if (row) row.classList.add('done-item');
+  const count = tasksDone.filter(Boolean).length;
+  const tcEl = document.getElementById('taskCount');
+  if (tcEl) tcEl.textContent = `${count} / 4`;
+  const plEl = document.getElementById('progressLabel');
+  if (plEl) plEl.textContent = `${count} ${t('progress_suffix')}`;
+  const pfEl = document.getElementById('progressFill');
+  if (pfEl) pfEl.style.width = `${count/4*100}%`;
+}
+
+// ── STEP 0: Log in & bookmark ─────────
+function doLogin() {
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.classList.remove('needs-action');
+  document.getElementById('loginCard').style.opacity = '.55';
+  document.getElementById('navCard').style.display = 'block';
+  toast(t('toast_login_t'), t('toast_login_m'));
+  reveal('navCard');
+}
+
+function pickCrmTasks(el) {
+  if (el.classList.contains('picked')) return;
+  el.classList.add('picked');
+  el.classList.remove('needs-action');
+  document.getElementById('bookmarkCard').style.display = 'block';
+  document.getElementById('navBookmark').classList.add('needs-action', 'round');
+  toast(t('toast_navpicked_t'), t('toast_navpicked_m'));
+  reveal('bookmarkCard');
+}
+
+function clickBookmark() {
+  const icon = document.getElementById('navBookmark');
+  if (!icon.classList.contains('needs-action')) return;
+  icon.textContent = '★';
+  icon.classList.remove('needs-action', 'round');
+  document.getElementById('bookmarksBar').classList.add('show');
+  toast(t('toast_bookmarked_t'), t('toast_bookmarked_m'));
+  doneTask(0);
+  setTimeout(() => goTo(1), 500);
+}
+
+// ── STEP 1: Select a view & edit columns ─
+function switchTaskView(el) {
+  document.querySelectorAll('.tl-tab').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function searchColleague() {
+  const v = document.getElementById('colleagueSearch').value.trim();
+  if (!v) return;
+  toast(t('toast_colleague_t'), t('toast_colleague_m'));
+}
+
+function openEditColumnsModal() {
+  document.getElementById('editColumnsModal').classList.add('show');
+}
+function closeEditColumnsModal() {
+  document.getElementById('editColumnsModal').classList.remove('show');
+}
+function togglePriorityCheck() {
+  priorityChecked = document.getElementById('chkPriority').checked;
+  document.getElementById('moveUpBtn').disabled = !priorityChecked;
+  if (priorityChecked) {
+    document.getElementById('priorityColItem').classList.remove('needs-action');
+    document.getElementById('moveUpBtn').classList.add('needs-action');
+  }
+}
+function movePriorityUp() {
+  priorityMoved = true;
+  document.getElementById('moveUpBtn').classList.remove('needs-action');
+  document.getElementById('moveUpBtn').disabled = true;
+  document.getElementById('btn-apply-cols').classList.add('needs-action');
+}
+function applyColumns() {
+  if (!priorityChecked || !priorityMoved) return;
+  columnsApplied = true;
+  document.querySelectorAll('.col-priority').forEach(el => el.classList.add('shown'));
+  closeEditColumnsModal();
+  document.getElementById('btn-editcols').classList.remove('needs-action');
+  document.getElementById('sortPriority').classList.add('needs-action');
+  toast(t('toast_colsapplied_t'), t('toast_colsapplied_m'));
+  reveal('thPriority');
+}
+
+let sortedByPriority = false;
+function sortByPriority() {
+  if (!columnsApplied) return;
+  const order = { High: 0, Medium: 1, Low: 2 };
+  const priorityKey = { High:'prio_high', Medium:'prio_medium', Low:'prio_low' };
+  const tbody = document.getElementById('taskRows');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const priorities = ['High','Medium','High','Low'];
+  rows.sort((a,b) => {
+    const ai = rows.indexOf(a), bi = rows.indexOf(b);
+    return order[priorities[ai]] - order[priorities[bi]];
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  document.getElementById('sortPriority').classList.add('sorted');
+  document.getElementById('sortPriority').classList.remove('needs-action');
+  sortedByPriority = true;
+  toast(t('toast_sorted_t'), t('toast_sorted_m'));
+  doneTask(1);
+  setTimeout(() => goTo(2), 500);
+}
+
+// ── STEP 2: View & complete a task ─────
+function toggleTaskCard() {
+  taskCardOpened = true;
+  const body = document.getElementById('taskCardBody');
+  const arrow = document.getElementById('taskCardHead');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+  document.getElementById('taskCardHead').classList.remove('needs-action');
+}
+function toggleServicesAgreement() {
+  saOpened = true;
+  document.getElementById('saBody').classList.toggle('open');
+}
+let taskQuizDone = false;
+function pickTaskOpt(btn) {
+  if (btn.disabled) return;
+  document.querySelectorAll('#task-opts .answer-option').forEach(b => b.disabled = true);
+  const isCorrect = btn.dataset.correct === 'true';
+  const fb = document.getElementById('task-feedback');
+  if (isCorrect) {
+    btn.classList.add('correct');
+    fb.className = 'feedback-box correct';
+    fb.textContent = t('task_fb_correct');
+    taskQuizDone = true;
+    document.getElementById('btn-task-complete').disabled = false;
+    document.getElementById('btn-task-complete').classList.add('needs-action');
+    reveal('btn-task-complete');
+  } else {
+    btn.classList.add('incorrect');
+    fb.className = 'feedback-box incorrect';
+    fb.textContent = t('task_fb_incorrect');
+    document.querySelectorAll('#task-opts .answer-option').forEach(b => { if (b!==btn) b.disabled = false; });
+  }
+  fb.style.display = 'block';
+  document.querySelectorAll('#task-opts .answer-option').forEach(b => b.classList.remove('needs-action'));
+}
+function completeTaskView() {
+  if (!taskQuizDone) return;
+  doneTask(2);
+  toast(t('toast_taskdone_t'), t('toast_taskdone_m'));
+  setTimeout(() => goTo(3), 500);
+}
+
+// ── STEP 3: Create & pin a note ─────────
+function openNoteModal() {
+  document.getElementById('noteModal').classList.add('show');
+  document.getElementById('noteText').value = '';
+  document.getElementById('btn-save-note').disabled = true;
+  document.getElementById('noteText').oninput = () => {
+    document.getElementById('btn-save-note').disabled = document.getElementById('noteText').value.trim().length === 0;
+  };
+  setTimeout(() => document.getElementById('noteText').focus(), 100);
+}
+function closeNoteModal() {
+  document.getElementById('noteModal').classList.remove('show');
+}
+function saveNote() {
+  const text = document.getElementById('noteText').value.trim();
+  if (!text) return;
+  noteSaved = true;
+  closeNoteModal();
+  document.getElementById('btn-createnote').classList.remove('needs-action');
+  const list = document.getElementById('notesList');
+  list.innerHTML = `
+    <div class="note-card" id="newNoteCard">
+      <span class="note-pin-badge">📌 PINNED</span>
+      <div class="note-head"><strong>${t('note_by')}</strong><span>${t('note_justnow')}</span></div>
+      <div class="note-body-text" id="newNoteText"></div>
+      <div class="note-actions">
+        <a onclick="pinNote()" id="pinLink">${t('note_actions_pin')}</a>
+        <span id="afterPin" style="display:none;color:var(--text-light)">${t('p3_unpin_hint')}</span>
+      </div>
+    </div>` + list.innerHTML;
+  document.getElementById('newNoteText').textContent = text;
+  document.getElementById('pinLink').classList.add('needs-action', 'inline');
+  toast(t('toast_notesaved_t'), t('toast_notesaved_m'));
+  reveal('newNoteCard');
+}
+function pinNote() {
+  notePinned = true;
+  document.getElementById('newNoteCard').classList.add('pinned');
+  document.getElementById('pinLink').style.display = 'none';
+  document.getElementById('afterPin').style.display = 'inline';
+  toast(t('toast_pinned_t'), t('toast_pinned_m'));
+  document.getElementById('btn-finish').disabled = false;
+  document.getElementById('btn-finish').classList.add('needs-action');
+  reveal('btn-finish');
+}
+function completeNoteStep() {
+  if (!notePinned) return;
+  doneTask(3);
+  setTimeout(() => goTo(4), 400);
+}
+
+// ── Reset ────────────────────────────
+function resetAll() {
+  location.reload();
+}
+
+// ── Language switcher setup ───────────
+(function setupLangSwitcher() {
+  const sel = document.getElementById('langsel');
+  Object.keys(LANG_NAMES).forEach(code => {
+    if (!I18N[code]) return; // only list languages with real translations
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = LANG_NAMES[code];
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => applyLang(sel.value));
+  const params = new URLSearchParams(location.search);
+  const initial = params.get('lang') || navigator.language || 'en';
+  applyLang(initial);
+})();
+</script>
+
+</body>
+</html>
