@@ -86,6 +86,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-primar
   transition: all .15s;
   margin-bottom: 2px;
   font-size: 17px;
+  position: relative;
 }
 .nav-icon:hover { background: rgba(255,255,255,.08); color: #fff; }
 .nav-icon.active { background: rgba(44,92,197,.25); color: #8FB3F0; }
@@ -460,15 +461,56 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-primar
 .login-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--border); padding-top: 20px; font-size: 13px; color: var(--text-primary); text-align: left; }
 
 /* ── CRM menu mock (panel 0) ──────────────────────── */
-.crm-menu { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-top: 10px; max-height: 320px; overflow-y: auto; }
+.crm-menu { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-top: 10px; }
 .crm-menu-item { padding: 9px 14px; font-size: 13px; cursor: default; border-bottom: 1px solid var(--grey-200); color: var(--text-primary); transition: background .12s; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .crm-menu-item:last-child { border-bottom: none; }
 .crm-menu-item:hover { background: var(--grey-100); }
 .crm-menu-item.picked { background: var(--green-light); color: #007A6E; font-weight: 600; }
 .crm-menu-divider { height: 1px; background: var(--border); margin: 4px 0; }
-.crm-bookmark-icon { color: var(--grey-400); font-size: 13px; cursor: pointer; flex-shrink: 0; }
-.crm-bookmark-icon.filled { color: var(--accent); }
-.crm-bookmark-icon.needs-action { color: var(--red); }
+.crm-bookmark-icon { font-size: 16px; cursor: pointer; flex-shrink: 0; padding: 4px 8px; border-radius: var(--r-md); opacity: .55; position: relative; }
+.crm-bookmark-icon.filled { opacity: 1; background: var(--accent-light); }
+.crm-bookmark-icon.needs-action { opacity: 1; background: var(--red-light); }
+
+/* ── Floating "click here" arrow (for small/easy-to-miss targets) ── */
+.action-arrow {
+  position: absolute;
+  background: #F2545B;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 60;
+  animation: arrow-bounce-right 1.5s ease-in-out infinite;
+  box-shadow: 0 2px 6px rgba(242,84,91,.35);
+}
+.action-arrow::before {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  border-style: solid;
+  left: -5px; top: 50%; transform: translateY(-50%);
+  border-width: 5px 5px 5px 0; border-color: transparent #F2545B transparent transparent;
+}
+.action-arrow { left: calc(100% + 10px); top: 50%; transform: translateY(-50%); }
+@keyframes arrow-bounce-right {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50%      { transform: translateY(-50%) translateX(4px); }
+}
+.action-arrow.below {
+  left: 50%; top: calc(100% + 8px); transform: translateX(-50%);
+  animation: arrow-bounce-below 1.5s ease-in-out infinite;
+}
+.action-arrow.below::before {
+  left: 50%; top: -5px; transform: translateX(-50%);
+  border-width: 0 5px 5px 5px; border-color: transparent transparent #F2545B transparent;
+}
+@keyframes arrow-bounce-below {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(3px); }
+}
 
 /* ── Bookmarks flyout (left-nav) ────────────────────── */
 .bookmarks-flyout { position: absolute; left: 56px; top: 8px; width: 220px; background: var(--white); border-radius: var(--r-lg); box-shadow: var(--shadow-md); z-index: 50; display: none; overflow: hidden; }
@@ -708,7 +750,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-primar
   <!-- ── Left nav ── -->
   <div class="left-nav">
     <div class="nav-logo">H</div>
-    <div class="nav-icon" id="navBookmark" onclick="toggleBookmarksFlyout()" title="Bookmarks">🔖</div>
+    <div class="nav-icon" id="navBookmark" onclick="toggleBookmarksFlyout()" title="Bookmarks">🔖
+      <span class="action-arrow" id="navBookmarkArrow" style="display:none" data-i18n="arrow_clickheretoconfirm">Click here to confirm</span>
+    </div>
     <div class="bookmarks-flyout" id="bookmarksFlyout">
       <div class="bf-header" data-i18n="bookmarks_label">Bookmarks</div>
       <div class="bf-item" id="bfTasksItem" style="display:none" data-i18n="nav_tasks">Tasks</div>
@@ -806,7 +850,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text-primar
                   <div class="crm-menu-item" data-i18n="crm_meetings">Meetings</div>
                   <div class="crm-menu-item needs-action" id="crmTasksItem" onclick="pickCrmTasks(this)">
                     <span data-i18n="crm_tasks">Tasks</span>
-                    <span class="crm-bookmark-icon" id="crmBookmarkIcon" onclick="event.stopPropagation(); clickCrmBookmark()">🔖</span>
+                    <span class="crm-bookmark-icon" id="crmBookmarkIcon" onclick="event.stopPropagation(); clickCrmBookmark()">🔖<span class="action-arrow below" id="crmBookmarkArrow" style="display:none" data-i18n="arrow_clicktobookmark">Click to bookmark</span></span>
                   </div>
                   <div class="crm-menu-item" data-i18n="crm_playbooks">Playbooks</div>
                   <div class="crm-menu-item" data-i18n="crm_messagetemplates">Message Templates</div>
@@ -1170,6 +1214,11 @@ const I18N = {
     p0_title: "Find and bookmark Tasks", p0_sub: "You're logged in. Now find the Tasks area from the CRM menu and bookmark it — you'll use it every day.",
     p0_findtasks_title: "CRM menu",
     p0_findtasks_body: "Open the <strong>CRM</strong> menu in the left sidebar, click <strong>Tasks</strong>, then click the bookmark icon next to it.",
+    p0_hint_clickbookmarkicon: "Now click the <strong>🔖 bookmark icon</strong> next to Tasks.",
+    p0_fb_clickbookmarkicon: "✓ Good — you found Tasks. Now click the bookmark icon right next to it.",
+    p0_hint_confirmflyout: "Click the <strong>🔖 bookmark icon</strong> in the far-left sidebar to confirm.",
+    p0_fb_confirmflyout: "✓ Bookmarked. Now click the 🔖 icon in the far-left sidebar to confirm it's there.",
+    arrow_clicktobookmark: "Click to bookmark", arrow_clickheretoconfirm: "Click here to confirm",
     crm_contacts: "Contacts", crm_companies: "Companies", crm_deals: "Deals", crm_tickets: "Tickets", crm_tasks: "Tasks",
     crm_products: "Products", crm_orders: "Orders", crm_servicesagreement: "Services Agreement",
     crm_segments: "Segments (Lists)", crm_inbox: "Inbox", crm_calls: "Calls", crm_meetings: "Meetings",
@@ -2661,12 +2710,24 @@ function doLogin() {
   toast(t('toast_login_t'), t('toast_login_m'));
 }
 
+function showNavFeedback(msg) {
+  const fb = document.getElementById('nav-feedback');
+  fb.className = 'feedback-box info';
+  fb.style.display = 'block';
+  fb.textContent = msg;
+}
+
 function pickCrmTasks(el) {
   if (crmTasksPicked) return;
   crmTasksPicked = true;
   el.classList.remove('needs-action');
-  document.getElementById('crmBookmarkIcon').classList.add('needs-action');
+  const icon = document.getElementById('crmBookmarkIcon');
+  icon.classList.add('needs-action');
+  document.getElementById('crmBookmarkArrow').style.display = 'block';
+  document.getElementById('instrText').innerHTML = t('p0_hint_clickbookmarkicon');
+  showNavFeedback(t('p0_fb_clickbookmarkicon'));
   toast(t('toast_navpicked_t'), t('toast_navpicked_m'));
+  reveal('crmTasksItem');
 }
 
 function clickCrmBookmark() {
@@ -2675,9 +2736,13 @@ function clickCrmBookmark() {
   const icon = document.getElementById('crmBookmarkIcon');
   icon.classList.remove('needs-action');
   icon.classList.add('filled');
+  document.getElementById('crmBookmarkArrow').style.display = 'none';
   document.getElementById('bfTasksItem').style.display = 'block';
   document.getElementById('bookmarksBar').classList.add('show');
   document.getElementById('navBookmark').classList.add('needs-action', 'round');
+  document.getElementById('navBookmarkArrow').style.display = 'block';
+  document.getElementById('instrText').innerHTML = t('p0_hint_confirmflyout');
+  showNavFeedback(t('p0_fb_confirmflyout'));
   toast(t('toast_bookmarked_t'), t('toast_bookmarked_m'));
   reveal('navBookmark');
 }
@@ -2687,6 +2752,7 @@ function toggleBookmarksFlyout() {
   fly.classList.toggle('show');
   if (crmBookmarked) {
     document.getElementById('navBookmark').classList.remove('needs-action', 'round');
+    document.getElementById('navBookmarkArrow').style.display = 'none';
     if (!tasksDone[0]) {
       doneTask(0);
       setTimeout(() => goTo(1), 700);
