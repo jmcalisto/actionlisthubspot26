@@ -7,45 +7,56 @@ logging in and bookmarking Tasks to closing the loop with a pinned note on the c
 ## Purpose
 
 This is a hands-on, click-through trainer. Instead of reading the SOP, staff practise the
-exact workflow in a safe, simulated "HubSpot Sandbox" environment. Each step must be
-completed correctly before the next one unlocks, so trainees finish having performed every
-action in order.
+exact workflow in a safe, simulated "HubSpot Sandbox" environment. A coach panel with a
+bouncing arrow points at exactly what to click next, so trainees are never stuck guessing
+what the current step wants from them.
 
 ## How to use
 
 1. Open `index.html` directly in any modern web browser — double-click the file or drag it
    into a browser tab.
 2. No installation, server, or build step is required.
-3. Work through the five steps in order. Each step gates the next, and a progress bar and
-   task checklist track how far you've got.
+3. Work through the four modules in order. The coach panel tells you what to do at each step,
+   a floating arrow points at the exact element to click, and a progress strip along the top
+   tracks how far you've got.
+4. Progress is saved automatically (to the browser's local storage), so closing the tab and
+   reopening the file later offers to resume where you left off.
 
-## The five steps
+## The four modules
 
-1. **Log in & bookmark Tasks** — Sign in to HubSpot, find Tasks from the CRM menu, and
+1. **Log in & add a bookmark** — Sign in to HubSpot, find Tasks from the CRM menu, and
    bookmark the page since it's used every day.
-2. **Select a view & edit columns** — Choose a task view, add the Priority column, move it
-   next to Task → Contacts, and sort by priority.
-3. **View & complete a task** — Open a task, read the notes, check the Services Agreement to
-   confirm level/unit/lesson, decide how to contact the student, then mark the task complete.
-4. **Create & pin a note** — Update the record with what happened, add a note, and pin it so
-   the whole team can see it.
-5. **Complete** — Success screen with a completion code (`WSE-AL-TASK-COMPLETE-2026`) to copy
-   into the Knowledge Check.
+2. **Select a view & edit columns** — Choose a task view, add the Priority column, and sort
+   by priority.
+3. **View & complete a task** — Open a task, check the Services Agreement to confirm
+   level/unit/lesson, decide how to contact the student, then mark the task complete.
+4. **Create & pin a note** — Update the record with what happened, add a note, and either pin
+   it or wrap up via the alternate note-only branch — then land on a completion screen with a
+   code (`ACTION-LIST-2026`) to copy into the Knowledge Check.
 
 ## Tech & structure
 
-- **Single-file app:** everything lives in `index.html`.
-- **Vanilla stack:** plain HTML, CSS, and JavaScript — no frameworks, libraries, or build
-  tools. The only external resource is the Lexend Google Font.
-- **Inside the file:** inline `<style>` (CSS, theming, animations) near the top, the five
-  step panels (`panel-0` … `panel-4`) plus modals in the HTML body, and inline `<script>`
-  blocks (i18n, navigation, validation, progress tracking) near the bottom.
-- **Client-side only:** there is no backend and no API calls. All progress is held in memory,
-  so refreshing the page resets the walkthrough.
+- **Single-file app:** everything — markup, styles, and logic — lives in `index.html`.
+- **Vanilla stack:** plain HTML, CSS, and JavaScript. No frameworks, libraries, build tools,
+  or external fonts/assets — the system font stack is used throughout, so the file works
+  fully offline.
+- **Step-engine architecture:** a `STEPS` array describes every screen (`key`, `module`,
+  `title`, `body`, a `render()` that builds that step's fake-HubSpot UI, and a `wire()` that
+  attaches the click handling that advances the walkthrough). A small engine
+  (`renderStep()` / `advance()`) drives the trainee through them, including a branching path
+  in module 4 (`branch: 'complete'` vs `'note'`) so either valid real-world outcome is
+  accepted.
+- **Progress persistence:** current step and completed branches are saved to
+  `localStorage` (`wse_hubspot_tasklist_progress_v1`) after every step, with a resume banner
+  offered on reload and a restart option.
+- **Accessibility:** keyboard navigation and ARIA labelling are wired into the interactive
+  hotspots via `enhanceHotspotA11y()`.
+- **Client-side only:** there is no backend and no API calls.
 - **Desktop-oriented:** the layout assumes a wide screen and is not designed for mobile.
 
 ## Notes
 
-- All content is demo/instructional data (for example, the sample student "Maria Novak"); it
-  is not connected to a live HubSpot instance.
-- Progress is not saved between sessions — closing or refreshing the page starts over.
+- All content is demo/instructional data (for example, the sample student "Abdelilah
+  Karimi"); it is not connected to a live HubSpot instance.
+- This version does not include the multi-language switcher used in earlier iterations of
+  this trainer — it is English-only.
