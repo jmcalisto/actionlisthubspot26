@@ -56,7 +56,7 @@ what the current step wants from them.
 
 ## Notes
 
-- All content is demo/instructional data (for example, the sample student "Abdelilah
-  Karimi"); it is not connected to a live HubSpot instance.
+- All content is demo/instructional data (a generic "Sample Student" and "Demo Contact
+  A–G", all with `example.com` emails); it is not connected to a live HubSpot instance.
 - This version does not include the multi-language switcher used in earlier iterations of
   this trainer — it is English-only.

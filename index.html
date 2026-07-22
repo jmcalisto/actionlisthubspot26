@@ -60,8 +60,8 @@ html,body{margin:0;padding:0;background:#eef2f6;font-family:-apple-system,BlinkM
 .hs-search{flex:1;max-width:420px;background:#425b76;border-radius:6px;height:34px;display:flex;align-items:center;gap:8px;padding:0 10px;color:#c6d3e0;font-size:13px;}
 .hs-search .kbd{margin-left:auto;background:#33475b;border-radius:4px;padding:2px 6px;font-size:11px;color:#9db3c7;}
 .hs-top-icons{margin-left:auto;display:flex;align-items:center;gap:18px;font-size:13px;color:#c6d3e0;}
-.hs-top-icons .ic{width:19px;height:19px;opacity:.9;}
-.ic{width:17px;height:17px;flex:none;}
+.hs-top-icons .ic{width:19px !important;height:19px !important;opacity:.9;flex:none;}
+.ic{width:17px;height:17px;flex:none;vertical-align:middle;}
 .hs-bell{position:relative;}
 .hs-bell .badge{position:absolute;top:-7px;right:-9px;background:var(--red);color:#fff;font-size:9px;font-weight:700;border-radius:8px;padding:1px 4px;}
 .hs-assistant{display:flex;align-items:center;gap:5px;color:#fff;font-weight:600;}
@@ -70,10 +70,10 @@ html,body{margin:0;padding:0;background:#eef2f6;font-family:-apple-system,BlinkM
 
 /* ---------- Left sidebar ---------- */
 .hs-body{display:flex;min-height:584px;}
-.hs-sidebar{width:56px;flex:none;background:var(--navy);border-right:1px solid #2a3b4c;display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:6px;}
-.hs-sb-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c6d3e0;cursor:pointer;position:relative;}
+.hs-sidebar{width:56px;flex:none;background:var(--navy);border-right:1px solid #2a3b4c;display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:4px;overflow:hidden;}
+.hs-sb-icon{width:38px;height:38px;flex:none;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c6d3e0;cursor:pointer;position:relative;}
 .hs-sb-icon.active{background:#425b76;color:#fff;}
-.hs-sb-icon svg{width:19px;height:19px;}
+.hs-sb-icon svg,.hs-sb-icon .ic{width:20px !important;height:20px !important;flex:none;}
 .hs-sb-sep{width:26px;height:1px;background:#465e77;margin:6px 0;}
 .hs-sb-icon.hotspot::after{content:'';position:absolute;inset:-4px;border-radius:10px;box-shadow:0 0 0 3px var(--orange);animation:pulse 1.4s infinite;pointer-events:none;}
 
@@ -385,25 +385,25 @@ let typingTimer = null;
    here and it updates everywhere it's rendered. */
 const DATA = {
   currentUser: 'Test User',
-  currentUserEmail: 'test.user@wallstreetenglish.com',
+  currentUserEmail: 'test.user@example.com',
   student: {
-    first: 'Abdelilah',
-    full: 'Abdelilah Karimi',
-    email: 'abdelilah.karimi82@gmail.com',
-    phone: '+49 176 2205 3311',
-    mobile: '+49 176 2205 3312',
+    first: 'Sample',
+    full: 'Sample Student',
+    email: 'sample.student@example.com',
+    phone: '+00 000 000 0001',
+    mobile: '+00 000 000 0002',
     level: 13, unit: 50, lesson: 1,
-    dealAmount: '€1,092.44',
+    dealAmount: '€0,000.00',
   },
-  // background contacts shown in the task-list tables
+  // background contacts shown in the task-list tables (all clearly fake demo names)
   contacts: {
-    manuela:  'Manuela Fischer',
-    saskia:   'Saskia Bauer',
-    max:      'Max Lang',
-    alexander:'Alexander Voss',
-    petra:    'Petra Klein',
-    claudia:  'Claudia Reiner',
-    ghadir:   'Ghadir Amini',
+    a:  'Demo Contact A',
+    b:   'Demo Contact B',
+    c:      'Demo Contact C',
+    d:'Demo Contact D',
+    e:    'Demo Contact E',
+    f:  'Demo Contact F',
+    g:   'Demo Contact G',
   },
   completionCode: 'ACTION-LIST-2026',
 };
@@ -589,14 +589,14 @@ function recRight(){
     <div class="rr-sec"><h4>Companies (0) <span class="add">+ Add</span></h4></div>
     <div class="rr-sec"><h4>Deals (2) <span class="add">+ Add</span></h4>
       <div class="dealcard">
-        <div class="dt">Abdelilah Karimi Renewal</div>
+        <div class="dt">Sample Student Renewal</div>
         <div class="dl">Amount: <b class="dv">--</b></div>
         <div class="dl">Close Date: <b class="dv">--</b></div>
         <div class="dl">Deal Stage: <b class="dv">Lead</b></div>
       </div>
       <div class="dealcard">
-        <div class="dt">Abdelilah Karimi 1st Contr…</div>
-        <div class="dl">Amount: <b class="dv">€1,092.44</b></div>
+        <div class="dt">Sample Student 1st Contr…</div>
+        <div class="dl">Amount: <b class="dv">€0,000.00</b></div>
         <div class="dl">Close Date: <b class="dv">March 31, 2026</b></div>
         <div class="dl">Deal Stage: <b class="dv">Closed won</b></div>
         <div class="tag">CONTRACTS</div>
@@ -605,7 +605,7 @@ function recRight(){
     </div>
     <div class="rr-sec"><h4>Services Agreement (1) <span class="add">+ Add</span></h4>
       <div class="svccard">
-        <div class="st">📁 <b>Core Course - Abdelilah Karimi</b></div>
+        <div class="st">📁 <b>Core Course - Sample Student</b></div>
         <div class="row">Welcome/First lesson Date <b>04/08/2…</b></div>
         <div class="row">Multimedia book mark <b>L13, U50, L1…</b></div>
         <div class="row">First Encounter Summary <b>U45, 19.04…</b></div>
@@ -642,7 +642,7 @@ STEPS.push({
       <h2>Sign in</h2>
       <div class="sub">or <a href="#">create an account</a></div>
       <div class="err-box"><b>Your authentication has expired</b><p>Please log in again to continue.</p></div>
-      <div class="login-email">test.user@wallstreetenglish.com &nbsp;✎</div>
+      <div class="login-email">test.user@example.com &nbsp;✎</div>
       <div class="login-remember"><span class="cb"></span> Remember me</div>
       <button class="login-passkey hotspot" data-hotspot="true">${I('key')} Sign in with passkey</button>
       <div class="login-alt">Sign in a different way</div>
@@ -704,14 +704,14 @@ STEPS.push({
 function baseTaskRows(){
   const c = DATA.contacts, s = DATA.student;
   return `
-    <tr><td><span class="tlink">Remind to Book Social …</span></td><td>${c.manuela}</td><td>Jul 8, 2026</td><td>Mar 17, 2026</td><td>To-do</td></tr>
+    <tr><td><span class="tlink">Remind to Book Social …</span></td><td>${c.a}</td><td>Jul 8, 2026</td><td>Mar 17, 2026</td><td>To-do</td></tr>
     <tr><td><span class="tlink">Remind to Book Social …</span></td><td>${s.full}</td><td>Apr 8, 2026</td><td>Apr 1, 2026</td><td>To-do</td></tr>
     <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>${s.full}</td><td>Apr 8, 2026</td><td>Apr 1, 2026</td><td>To-do</td></tr>
-    <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>${c.saskia}</td><td>Jun 5, 2026</td><td>May 24, 2026</td><td>To-do</td></tr>
-    <tr><td><span class="tlink">Please downgrade to L…</span></td><td>${c.manuela}</td><td>Jul 8, 2026</td><td>Mar 17, 2026</td><td>To-do</td></tr>
-    <tr><td><span class="tlink">Follow up with Max Lang</span></td><td>${c.max}</td><td>Apr 2, 2026</td><td>Mar 31, 2026</td><td>To-do</td></tr>
-    <tr><td><span class="tlink">Follow up with Alexander Voss</span></td><td>${c.alexander}</td><td>Jun 18, 2026</td><td>Apr 8, 2026</td><td>To-do</td></tr>
-    <tr><td><span class="tlink">Active not booked</span></td><td>${c.petra}</td><td>Jun 18, 2026</td><td>Mar 5, 2026</td><td>To-do</td></tr>`;
+    <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>${c.b}</td><td>Jun 5, 2026</td><td>May 24, 2026</td><td>To-do</td></tr>
+    <tr><td><span class="tlink">Please downgrade to L…</span></td><td>${c.a}</td><td>Jul 8, 2026</td><td>Mar 17, 2026</td><td>To-do</td></tr>
+    <tr><td><span class="tlink">Follow up with Demo Contact C</span></td><td>${c.c}</td><td>Apr 2, 2026</td><td>Mar 31, 2026</td><td>To-do</td></tr>
+    <tr><td><span class="tlink">Follow up with Demo Contact D</span></td><td>${c.d}</td><td>Jun 18, 2026</td><td>Apr 8, 2026</td><td>To-do</td></tr>
+    <tr><td><span class="tlink">Active not booked</span></td><td>${c.e}</td><td>Jun 18, 2026</td><td>Mar 5, 2026</td><td>To-do</td></tr>`;
 }
 
 STEPS.push({
@@ -803,8 +803,8 @@ STEPS.push({
           <div style="padding:10px;border-bottom:1px solid var(--border);color:var(--muted-2);font-size:13px;">${I('search')} Search</div>
           <div style="padding:10px 14px;background:#eaf6f9;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--navy);">✓ ⚡ Me <span style="color:var(--muted-2);font-size:11.5px;margin-left:auto">current user</span></div>
           <div style="padding:10px 14px;font-size:13.5px;color:var(--navy)">☐ Test User</div>
-          <div style="padding:10px 14px;font-size:13.5px;color:var(--navy)">☐ James Richardson</div>
-          <div style="padding:10px 14px;font-size:13.5px;color:var(--navy)">☐ Sonia Gorzalnik</div>
+          <div style="padding:10px 14px;font-size:13.5px;color:var(--navy)">☐ Demo Colleague A</div>
+          <div style="padding:10px 14px;font-size:13.5px;color:var(--navy)">☐ Demo Colleague B</div>
           <div style="padding:10px 14px;font-size:13.5px;color:var(--navy);border-top:1px solid var(--border)">☐ Unassigned</div>
         </div>
       </div>
@@ -827,9 +827,9 @@ STEPS.push({
       <div class="filter-row"><div class="fchip">Assigned to (1) <span class="x">✕</span></div><div class="fchip plain">Task type ${I('chevdown')}</div><div class="fchip plain">Task stage ${I('chevdown')}</div><div class="fchip plain">Due date ${I('chevdown')}</div><div class="fchip plain">Queue ${I('chevdown')}</div><div class="fchip plain">Clear all</div></div>
       <table class="tsk"><thead><tr><th>Task Title</th><th><span style="display:inline-flex;align-items:center;gap:6px">Task Stage <span class="hotspot iconbtn" data-hotspot="true" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border-radius:6px;color:var(--muted)">${I('dots')}</span></span></th><th>Task → Contacts</th><th>Last Contacted</th></tr></thead>
       <tbody>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Manuela Fischer</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Abdelilah Karimi</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Petra Klein</td><td>Jun 18, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact A</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Sample Student</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact E</td><td>Jun 18, 2026</td></tr>
       </tbody></table>
     </div></div>`;
   },
@@ -953,12 +953,12 @@ STEPS.push({
       ${taskTabs('all',{allCount:11})}
       <table class="tsk"><thead><tr><th>Task Title</th><th>Task → Contacts</th><th class="hotspot" data-hotspot="true" style="display:table-cell">Priority ${I('sort')}</th><th>Last Contacted</th></tr></thead>
       <tbody>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Manuela Fischer</td><td><span class="pill low"></span>Low</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Abdelilah Karimi</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>Abdelilah Karimi</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Please downgrade to L…</span></td><td>Manuela Fischer</td><td><span class="pill none"></span>None</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Follow up with Max …</span></td><td>Max Lang</td><td><span class="pill none"></span>None</td><td>Apr 2, 2026</td></tr>
-        <tr><td><span class="tlink">Active not booked</span></td><td>Petra Klein</td><td><span class="pill med"></span>Medium</td><td>Jun 18, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Demo Contact A</td><td><span class="pill low"></span>Low</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Sample Student</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>Sample Student</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Please downgrade to L…</span></td><td>Demo Contact A</td><td><span class="pill none"></span>None</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Follow up with Max …</span></td><td>Demo Contact C</td><td><span class="pill none"></span>None</td><td>Apr 2, 2026</td></tr>
+        <tr><td><span class="tlink">Active not booked</span></td><td>Demo Contact E</td><td><span class="pill med"></span>Medium</td><td>Jun 18, 2026</td></tr>
       </tbody></table>
     </div></div>`;
   },
@@ -977,12 +977,12 @@ STEPS.push({
       ${taskTabs('all',{allCount:11, hotTab:'overdue'})}
       <table class="tsk"><thead><tr><th>Task Title</th><th>Task → Contacts</th><th>Priority ${I('sort')}</th><th>Last Contacted</th></tr></thead>
       <tbody>
-        <tr><td><span class="tlink">Active not booked</span></td><td>Petra Klein</td><td><span class="pill med"></span>Medium</td><td>Jun 18, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Manuela Fischer</td><td><span class="pill low"></span>Low</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Abdelilah Karimi</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>Abdelilah Karimi</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Please downgrade to L…</span></td><td>Manuela Fischer</td><td><span class="pill none"></span>None</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Follow up with Max …</span></td><td>Max Lang</td><td><span class="pill none"></span>None</td><td>Apr 2, 2026</td></tr>
+        <tr><td><span class="tlink">Active not booked</span></td><td>Demo Contact E</td><td><span class="pill med"></span>Medium</td><td>Jun 18, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Demo Contact A</td><td><span class="pill low"></span>Low</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Sample Student</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Compl…</span></td><td>Sample Student</td><td><span class="pill low"></span>Low</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Please downgrade to L…</span></td><td>Demo Contact A</td><td><span class="pill none"></span>None</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Follow up with Max …</span></td><td>Demo Contact C</td><td><span class="pill none"></span>None</td><td>Apr 2, 2026</td></tr>
       </tbody></table>
     </div></div>`;
   },
@@ -1009,11 +1009,11 @@ STEPS.push({
       </div>
       <table class="tsk"><thead><tr><th>Task Title</th><th>Task Stage</th><th>Task → Contacts</th><th>Last Contacted</th></tr></thead>
       <tbody>
-        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Claudia Reiner</td><td>Jun 25, 2026</td></tr>
-        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Ghadir Amini</td><td>May 11, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Manuela Fischer</td><td>Jul 8, 2026</td></tr>
-        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Abdelilah Karimi</td><td>Apr 8, 2026</td></tr>
-        <tr><td><span class="tlink">Follow up with Max Lang</span></td><td>Not Started (Task Pipeline)</td><td>Max Lang</td><td>Apr 2, 2026</td></tr>
+        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact F</td><td>Jun 25, 2026</td></tr>
+        <tr><td><span class="tlink">Active not booked</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact G</td><td>May 11, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact A</td><td>Jul 8, 2026</td></tr>
+        <tr><td><span class="tlink">Remind to Book Social …</span></td><td>Not Started (Task Pipeline)</td><td>Sample Student</td><td>Apr 8, 2026</td></tr>
+        <tr><td><span class="tlink">Follow up with Demo Contact C</span></td><td>Not Started (Task Pipeline)</td><td>Demo Contact C</td><td>Apr 2, 2026</td></tr>
       </tbody></table>
     </div></div>`;
   },
@@ -1107,7 +1107,7 @@ STEPS.push({
             <div class="fld"><label>Assigned to</label><div class="v">Test User</div></div>
           </div>
           <label style="font-size:12px;color:var(--muted-2)">Task Notes</label>
-          <div class="notesbox">Remind student Abdelilah Karimi to book their Encounter.<br><br>The student's current level is 13, current unit is 50, current lesson is 1.</div>
+          <div class="notesbox">Remind student Sample Student to book their Encounter.<br><br>The student's current level is 13, current unit is 50, current lesson is 1.</div>
         </div>
       </div>
     `, {headerRight:`<button class="btn btn-ghost">Reschedule</button><button class="btn btn-orange">${I('check')} Complete</button>`});
@@ -1131,11 +1131,11 @@ STEPS.push({
         <div class="taskopen">
           <div class="torow"><div class="fld"><label>Task stage</label><div class="v">Not Started</div></div></div>
           <label style="font-size:12px;color:var(--muted-2)">Task Notes</label>
-          <div class="notesbox">Remind student Abdelilah Karimi to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div>
+          <div class="notesbox">Remind student Sample Student to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div>
         </div>
       </div>
       <div style="position:absolute;top:0;right:0;bottom:0;width:420px;background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.18);">
-        <div style="background:linear-gradient(90deg,#00a4bd,#00c9b7);color:#fff;padding:20px 22px;font-size:19px;font-weight:800;">Core Course - Abdelilah Karimi <span class="x" style="float:right;cursor:pointer">${I('x')}</span></div>
+        <div style="background:linear-gradient(90deg,#00a4bd,#00c9b7);color:#fff;padding:20px 22px;font-size:19px;font-weight:800;">Core Course - Sample Student <span class="x" style="float:right;cursor:pointer">${I('x')}</span></div>
         <div style="padding:18px 22px">
           <div style="color:var(--teal);font-weight:700;margin-bottom:10px">View record</div>
           <div style="font-size:13px;color:var(--muted-2);margin:8px 0">Pipeline: <b style="color:var(--navy)">Service Pipeline</b></div>
@@ -1159,9 +1159,9 @@ STEPS.push({
   render(){
     return recShell(`
       <div class="rec-tabs"><div class="rt">Overview</div><div class="rt active">Activities</div><div class="rt">Intelligence</div></div>
-      <div class="act-body" style="padding-top:16px"><div class="taskopen"><div class="notesbox">Remind student Abdelilah Karimi to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div></div></div>
+      <div class="act-body" style="padding-top:16px"><div class="taskopen"><div class="notesbox">Remind student Sample Student to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div></div></div>
       <div style="position:absolute;top:0;right:0;bottom:0;width:420px;background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.18);overflow-y:auto">
-        <div style="background:linear-gradient(90deg,#00a4bd,#00c9b7);color:#fff;padding:20px 22px;font-size:19px;font-weight:800;">Core Course - Abdelilah Karimi</div>
+        <div style="background:linear-gradient(90deg,#00a4bd,#00c9b7);color:#fff;padding:20px 22px;font-size:19px;font-weight:800;">Core Course - Sample Student</div>
         <div style="padding:18px 22px">
           <div style="font-weight:800;color:var(--navy);margin-bottom:10px">Core Course</div>
           <div style="font-size:13px;color:var(--muted-2);margin:10px 0">Core course current level<br><b style="color:var(--navy);font-size:16px">13</b></div>
@@ -1185,7 +1185,7 @@ STEPS.push({
   render(){
     return recShell(`
       <div class="rec-tabs"><div class="rt">Overview</div><div class="rt active">Activities</div><div class="rt">Intelligence</div></div>
-      <div class="act-body" style="padding-top:16px"><div class="taskopen"><div class="notesbox">Remind student Abdelilah Karimi to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div></div></div>
+      <div class="act-body" style="padding-top:16px"><div class="taskopen"><div class="notesbox">Remind student Sample Student to book their Encounter.<br><br>Level 13, unit 50, lesson 1.</div></div></div>
     `);
   },
   wire(root, next){
@@ -1202,7 +1202,7 @@ STEPS.push({
   body:"After contacting the student, update the record with what happened. Pick an outcome below to see how each is handled.",
   render(){
     return `${topbar()}<div class="hs-body">${sidebar({active:'bookmark'})}<div class="hs-main">
-      <div style="padding:24px 30px 0"><h2 style="color:var(--navy);margin:0 0 4px">📞 You called Abdelilah Karimi…</h2><p style="color:var(--muted);margin:0">Choose what happened on the call to continue the training.</p></div>
+      <div style="padding:24px 30px 0"><h2 style="color:var(--navy);margin:0 0 4px">📞 You called Sample Student…</h2><p style="color:var(--muted);margin:0">Choose what happened on the call to continue the training.</p></div>
       <div class="choice-wrap">
         <div class="choice-card" data-choice="complete"><div class="em">✅</div><h3>They booked the Encounter</h3><p>Mark the task as completed — either strike it out inline or use the Complete button.</p></div>
         <div class="choice-card" data-choice="note"><div class="em">📝</div><h3>Reached them, but not available yet</h3><p>Leave the task open and add a note so the whole team knows not to contact them until they're back.</p></div>
@@ -1277,7 +1277,7 @@ STEPS.push({
             <div class="fld"><label>Priority</label><div class="v"><span class="pill med"></span>Medium</div></div>
           </div>
           <label style="font-size:12px;color:var(--muted-2)">Task Notes</label>
-          <div class="notesbox"><span class="strike">Remind student Abdelilah Karimi to book their Encounter.</span></div>
+          <div class="notesbox"><span class="strike">Remind student Sample Student to book their Encounter.</span></div>
         </div>
         <div class="hotspot" data-hotspot="true" style="margin-top:20px;text-align:center;color:var(--teal);font-weight:700;cursor:pointer">Continue →</div>
       </div>
@@ -1324,7 +1324,7 @@ STEPS.push({
       </div>
       <div class="act-body">
         <div class="month-lbl">April 2026</div>
-        <div class="card"><div class="chead"><b>Note</b> by Jamina Camp <span class="cdate">Apr 1, 2026 at 11:14 AM GMT+2</span></div><div class="ctext">Du, originally from Morocco, works in Project Management for nuclear power plants.</div></div>
+        <div class="card"><div class="chead"><b>Note</b> by Demo Colleague C <span class="cdate">Apr 1, 2026 at 11:14 AM GMT+2</span></div><div class="ctext">Sample note text — this is placeholder demo content for training.</div></div>
       </div>
     `);
   },
@@ -1344,12 +1344,12 @@ STEPS.push({
       <div class="rec-tabs"><div class="rt">Overview</div><div class="rt active">Activities</div><div class="rt">Intelligence</div></div>
       <div class="act-tabs"><div class="at">All activities</div><div class="at active">Notes</div><div class="at">Emails</div></div>
       <div class="act-body"><div class="month-lbl">April 2026</div>
-        <div class="card"><div class="chead"><b>Note</b> by Jamina Camp <span class="cdate">Apr 1, 2026</span></div><div class="ctext">Du, originally from Morocco, works in Project Management…</div></div>
+        <div class="card"><div class="chead"><b>Note</b> by Demo Colleague C <span class="cdate">Apr 1, 2026</span></div><div class="ctext">Sample note text — placeholder demo content…</div></div>
       </div>
       <div class="note-modal">
         <div class="nmhead">Note <span class="x">${I('x')}</span></div>
         <div class="nmbody">
-          <div class="forrow">For <b>Abdelilah Karimi's record</b></div>
+          <div class="forrow">For <b>Sample Student's record</b></div>
           <div class="note-ta placeholder hotspot" data-hotspot="true" id="notearea">Start typing to leave a note…</div>
           <div class="note-toolbar"><b>B</b><i>I</i><u>U</u> More ▾ 🔗 🖼 🎓 ¶ 📎 ✦</div>
           <div class="assoc">Associated with 2 records ▾</div>
@@ -1404,7 +1404,7 @@ STEPS.push({
           <div class="cfoot">💬 Add comment <span class="r">2 associations ▾</span></div>
         </div>
         <div class="month-lbl">April 2026</div>
-        <div class="card"><div class="chead"><b>Note</b> by Jamina Camp <span class="cdate">Apr 1, 2026</span></div><div class="ctext">Du, originally from Morocco, works in Project Management…</div></div>
+        <div class="card"><div class="chead"><b>Note</b> by Demo Colleague C <span class="cdate">Apr 1, 2026</span></div><div class="ctext">Sample note text — placeholder demo content…</div></div>
       </div>
     `);
   },
@@ -1536,7 +1536,7 @@ STEPS.push({
       <div class="act-body">
         ${toast('Activity successfully deleted. <span class="xx">✕</span>')}
         <div class="month-lbl" style="margin-top:44px">April 2026</div>
-        <div class="card"><div class="chead"><b>Note</b> by Jamina Camp <span class="cdate">Apr 1, 2026 at 11:14 AM GMT+2</span></div><div class="ctext">Du, originally from Morocco, works in Project Management for nuclear power plants.</div></div>
+        <div class="card"><div class="chead"><b>Note</b> by Demo Colleague C <span class="cdate">Apr 1, 2026 at 11:14 AM GMT+2</span></div><div class="ctext">Sample note text — this is placeholder demo content for training.</div></div>
         <div class="hotspot" data-hotspot="true" style="margin-top:20px;text-align:center;color:var(--teal);font-weight:700;cursor:pointer">Continue →</div>
       </div>
     `);
