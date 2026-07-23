@@ -1829,5 +1829,33 @@ if(!offerResume()){
 }
 
 </script>
+<script>
+/* ---------------- Auto-resizing iframe embed ----------------
+   When this page is embedded via a plain <iframe> (e.g. in Articulate Rise), the
+   iframe's own height attribute is a static guess that can't track this page's real
+   height, which changes per training step. Report our real height to the parent
+   window on load and whenever it changes, so a small listener script on the host
+   page can keep the iframe sized to match (see the trainer's README for the
+   matching parent-side snippet). No-op entirely when opened as a normal page. */
+(function(){
+  if(!window.parent || window.parent === window) return;
+  var pageEl = document.getElementById('page');
+  var lastHeight = 0;
+  function reportHeight(){
+    var h = pageEl.scrollHeight;
+    if(h !== lastHeight){
+      lastHeight = h;
+      window.parent.postMessage({ type: 'wse-hubspot-tasklist-resize', height: h }, '*');
+    }
+  }
+  if(window.ResizeObserver){
+    new ResizeObserver(reportHeight).observe(pageEl);
+  } else {
+    window.addEventListener('resize', reportHeight);
+    setInterval(reportHeight, 500);
+  }
+  reportHeight();
+})();
+</script>
 </body>
 </html>
